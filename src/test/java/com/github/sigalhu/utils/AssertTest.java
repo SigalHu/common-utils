@@ -574,19 +574,20 @@ public class AssertTest {
     }
 
     private static class TestAssert {
-        public static final Assert checker = new Assert((code, message) -> new TestException(code.intValue(), message));
+        public static final Assert checker = new Assert((code, message) ->
+                new TestException(code == null ? null : code.intValue(), message));
     }
 
     private static class TestException extends RuntimeException {
 
-        private int code;
+        private Integer code;
 
-        public TestException(int code, String message) {
+        public TestException(Integer code, String message) {
             super(message);
             this.code = code;
         }
 
-        public int getCode() {
+        public Integer getCode() {
             return code;
         }
     }
