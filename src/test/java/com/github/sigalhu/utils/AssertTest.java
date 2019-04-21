@@ -13,6 +13,8 @@ public class AssertTest {
     @Test
     public void isTrue() {
         Assert.isTrue(true, () -> new TestException(10000, "The expression must be true!"));
+        Assert.isTrue(true, "The expression must be true!");
+        Assert.isTrue(true, () -> "The expression must be true!");
         TestAssert.checker.isTrue(true, 10000L);
         TestAssert.checker.isTrue(true, () -> 10000L);
         TestAssert.checker.isTrue(true, 10000L, "The expression must be true!");
@@ -26,6 +28,20 @@ public class AssertTest {
             throw new Exception();
         } catch (Exception e) {
             org.junit.Assert.assertTrue(e instanceof TestException);
+        }
+
+        try {
+            Assert.isTrue(false, "The expression must be true!");
+            throw new Exception();
+        } catch (Exception e) {
+            org.junit.Assert.assertTrue(e instanceof IllegalArgumentException);
+        }
+
+        try {
+            Assert.isTrue(false, () -> "The expression must be true!");
+            throw new Exception();
+        } catch (Exception e) {
+            org.junit.Assert.assertTrue(e instanceof IllegalArgumentException);
         }
 
         try {
@@ -60,6 +76,8 @@ public class AssertTest {
     @Test
     public void isFalse() {
         Assert.isFalse(false, () -> new TestException(10000, "The expression must be false!"));
+        Assert.isFalse(false, "The expression must be false!");
+        Assert.isFalse(false, () -> "The expression must be false!");
         TestAssert.checker.isFalse(false, 10000L);
         TestAssert.checker.isFalse(false, () -> 10000L);
         TestAssert.checker.isFalse(false, 10000L, "The expression must be false!");
@@ -73,6 +91,20 @@ public class AssertTest {
             throw new Exception();
         } catch (Exception e) {
             org.junit.Assert.assertTrue(e instanceof TestException);
+        }
+
+        try {
+            Assert.isFalse(true, "The expression must be false!");
+            throw new Exception();
+        } catch (Exception e) {
+            org.junit.Assert.assertTrue(e instanceof IllegalArgumentException);
+        }
+
+        try {
+            Assert.isFalse(true, () -> "The expression must be false!");
+            throw new Exception();
+        } catch (Exception e) {
+            org.junit.Assert.assertTrue(e instanceof IllegalArgumentException);
         }
 
         try {
@@ -107,6 +139,8 @@ public class AssertTest {
     @Test
     public void isNull() {
         Assert.isNull(null, () -> new TestException(10000, "The object must be null!"));
+        Assert.isNull(null, "The object must be null!");
+        Assert.isNull(null, () -> "The object must be null!");
         TestAssert.checker.isNull(null, 10000L);
         TestAssert.checker.isNull(null, () -> 10000L);
         TestAssert.checker.isNull(null, 10000L, "The object must be null!");
@@ -120,6 +154,20 @@ public class AssertTest {
             throw new Exception();
         } catch (Exception e) {
             org.junit.Assert.assertTrue(e instanceof TestException);
+        }
+
+        try {
+            Assert.isNull(0, "The object must be null!");
+            throw new Exception();
+        } catch (Exception e) {
+            org.junit.Assert.assertTrue(e instanceof IllegalArgumentException);
+        }
+
+        try {
+            Assert.isNull(0, () -> "The object must be null!");
+            throw new Exception();
+        } catch (Exception e) {
+            org.junit.Assert.assertTrue(e instanceof IllegalArgumentException);
         }
 
         try {
@@ -154,6 +202,8 @@ public class AssertTest {
     @Test
     public void notNull() {
         Assert.notNull(0, () -> new TestException(10000, "The object must not be null!"));
+        Assert.notNull(0, "The object must not be null!");
+        Assert.notNull(0, () -> "The object must not be null!");
         TestAssert.checker.notNull(0, 10000L);
         TestAssert.checker.notNull(0, () -> 10000L);
         TestAssert.checker.notNull(0, 10000L, "The object must not be null!");
@@ -167,6 +217,20 @@ public class AssertTest {
             throw new Exception();
         } catch (Exception e) {
             org.junit.Assert.assertTrue(e instanceof TestException);
+        }
+
+        try {
+            Assert.notNull(null, "The object must not be null!");
+            throw new Exception();
+        } catch (Exception e) {
+            org.junit.Assert.assertTrue(e instanceof IllegalArgumentException);
+        }
+
+        try {
+            Assert.notNull(null, () -> "The object must not be null!");
+            throw new Exception();
+        } catch (Exception e) {
+            org.junit.Assert.assertTrue(e instanceof IllegalArgumentException);
         }
 
         try {
@@ -201,6 +265,8 @@ public class AssertTest {
     @Test
     public void hasLength() {
         Assert.hasLength(" ", () -> new TestException(10000, "The text must have length!"));
+        Assert.hasLength(" ", "The text must have length!");
+        Assert.hasLength(" ", () -> "The text must have length!");
         TestAssert.checker.hasLength(" ", 10000L);
         TestAssert.checker.hasLength(" ", () -> 10000L);
         TestAssert.checker.hasLength(" ", 10000L, "The text must have length!");
@@ -214,6 +280,20 @@ public class AssertTest {
             throw new Exception();
         } catch (Exception e) {
             org.junit.Assert.assertTrue(e instanceof TestException);
+        }
+
+        try {
+            Assert.hasLength("", "The text must have length!");
+            throw new Exception();
+        } catch (Exception e) {
+            org.junit.Assert.assertTrue(e instanceof IllegalArgumentException);
+        }
+
+        try {
+            Assert.hasLength("", () -> "The text must have length!");
+            throw new Exception();
+        } catch (Exception e) {
+            org.junit.Assert.assertTrue(e instanceof IllegalArgumentException);
         }
 
         try {
@@ -248,6 +328,8 @@ public class AssertTest {
     @Test
     public void hasText() {
         Assert.hasText("text", () -> new TestException(10000, "The text must have text!"));
+        Assert.hasText("text", "The text must have text!");
+        Assert.hasText("text", () -> "The text must have text!");
         TestAssert.checker.hasText("text", 10000L);
         TestAssert.checker.hasText("text", () -> 10000L);
         TestAssert.checker.hasText("text", 10000L, "The text must have text!");
@@ -261,6 +343,20 @@ public class AssertTest {
             throw new Exception();
         } catch (Exception e) {
             org.junit.Assert.assertTrue(e instanceof TestException);
+        }
+
+        try {
+            Assert.hasText(" ", "The text must have text!");
+            throw new Exception();
+        } catch (Exception e) {
+            org.junit.Assert.assertTrue(e instanceof IllegalArgumentException);
+        }
+
+        try {
+            Assert.hasText(" ", () -> "The text must have text!");
+            throw new Exception();
+        } catch (Exception e) {
+            org.junit.Assert.assertTrue(e instanceof IllegalArgumentException);
         }
 
         try {
@@ -296,6 +392,8 @@ public class AssertTest {
     public void notEmpty() {
         Object[] array = new Object[]{0};
         Assert.notEmpty(array, () -> new TestException(10000, "The array must be not empty!"));
+        Assert.notEmpty(array, "The array must be not empty!");
+        Assert.notEmpty(array, () -> "The array must be not empty!");
         TestAssert.checker.notEmpty(array, 10000L);
         TestAssert.checker.notEmpty(array, () -> 10000L);
         TestAssert.checker.notEmpty(array, 10000L, "The array must be not empty!");
@@ -304,6 +402,8 @@ public class AssertTest {
         Collection<Object> collection = new ArrayList<>();
         collection.add(0);
         Assert.notEmpty(collection, () -> new TestException(10000, "The collection must be not empty!"));
+        Assert.notEmpty(collection, "The collection must be not empty!");
+        Assert.notEmpty(collection, () -> "The collection must be not empty!");
         TestAssert.checker.notEmpty(collection, 10000L);
         TestAssert.checker.notEmpty(collection, () -> 10000L);
         TestAssert.checker.notEmpty(collection, 10000L, "The collection must be not empty!");
@@ -312,6 +412,8 @@ public class AssertTest {
         Map<Object, Object> map = new HashMap<>();
         map.put(0, 0);
         Assert.notEmpty(map, () -> new TestException(10000, "The map must be not empty!"));
+        Assert.notEmpty(map, "The map must be not empty!");
+        Assert.notEmpty(map, () -> "The map must be not empty!");
         TestAssert.checker.notEmpty(map, 10000L);
         TestAssert.checker.notEmpty(map, () -> 10000L);
         TestAssert.checker.notEmpty(map, 10000L, "The map must be not empty!");
@@ -326,6 +428,20 @@ public class AssertTest {
             throw new Exception();
         } catch (Exception e) {
             org.junit.Assert.assertTrue(e instanceof TestException);
+        }
+
+        try {
+            Assert.notEmpty(Collections.emptyList().toArray(), "The array must be not empty!");
+            throw new Exception();
+        } catch (Exception e) {
+            org.junit.Assert.assertTrue(e instanceof IllegalArgumentException);
+        }
+
+        try {
+            Assert.notEmpty(Collections.emptyList().toArray(), () -> "The array must be not empty!");
+            throw new Exception();
+        } catch (Exception e) {
+            org.junit.Assert.assertTrue(e instanceof IllegalArgumentException);
         }
 
         try {
@@ -365,6 +481,20 @@ public class AssertTest {
         }
 
         try {
+            Assert.notEmpty(Collections.emptyList(), "The collection must be not empty!");
+            throw new Exception();
+        } catch (Exception e) {
+            org.junit.Assert.assertTrue(e instanceof IllegalArgumentException);
+        }
+
+        try {
+            Assert.notEmpty(Collections.emptyList(), () -> "The collection must be not empty!");
+            throw new Exception();
+        } catch (Exception e) {
+            org.junit.Assert.assertTrue(e instanceof IllegalArgumentException);
+        }
+
+        try {
             TestAssert.checker.notEmpty(Collections.emptyList(), 10000L);
             throw new Exception();
         } catch (Exception e) {
@@ -398,6 +528,20 @@ public class AssertTest {
             throw new Exception();
         } catch (Exception e) {
             org.junit.Assert.assertTrue(e instanceof TestException);
+        }
+
+        try {
+            Assert.notEmpty(Collections.emptyMap(), "The map must be not empty!");
+            throw new Exception();
+        } catch (Exception e) {
+            org.junit.Assert.assertTrue(e instanceof IllegalArgumentException);
+        }
+
+        try {
+            Assert.notEmpty(Collections.emptyMap(), () -> "The map must be not empty!");
+            throw new Exception();
+        } catch (Exception e) {
+            org.junit.Assert.assertTrue(e instanceof IllegalArgumentException);
         }
 
         try {

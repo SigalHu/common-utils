@@ -1,5 +1,7 @@
 package com.github.sigalhu.utils;
 
+import com.github.sigalhu.function.base.StringSupplier;
+
 import java.util.Collection;
 import java.util.Map;
 import java.util.function.BiFunction;
@@ -36,9 +38,21 @@ public class Assert {
         }
     }
 
-    public void isTrue(boolean expression, Long code, Supplier<String> messageSupplier) {
+    public void isTrue(boolean expression, Long code, StringSupplier messageSupplier) {
         if (!expression) {
             throw exceptionGenerator.apply(code, messageSupplier.get());
+        }
+    }
+
+    public static void isTrue(boolean expression, String message) {
+        if (!expression) {
+            throw new IllegalArgumentException(message);
+        }
+    }
+
+    public static void isTrue(boolean expression, StringSupplier messageSupplier) {
+        if (!expression) {
+            throw new IllegalArgumentException(messageSupplier.get());
         }
     }
 
@@ -66,9 +80,21 @@ public class Assert {
         }
     }
 
-    public void isFalse(boolean expression, Long code, Supplier<String> messageSupplier) {
+    public void isFalse(boolean expression, Long code, StringSupplier messageSupplier) {
         if (expression) {
             throw exceptionGenerator.apply(code, messageSupplier.get());
+        }
+    }
+
+    public static void isFalse(boolean expression, String message) {
+        if (expression) {
+            throw new IllegalArgumentException(message);
+        }
+    }
+
+    public static void isFalse(boolean expression, StringSupplier messageSupplier) {
+        if (expression) {
+            throw new IllegalArgumentException(messageSupplier.get());
         }
     }
 
@@ -96,9 +122,21 @@ public class Assert {
         }
     }
 
-    public void isNull(Object object, Long code, Supplier<String> messageSupplier) {
+    public void isNull(Object object, Long code, StringSupplier messageSupplier) {
         if (object != null) {
             throw exceptionGenerator.apply(code, messageSupplier.get());
+        }
+    }
+
+    public static void isNull(Object object, String message) {
+        if (object != null) {
+            throw new IllegalArgumentException(message);
+        }
+    }
+
+    public static void isNull(Object object, StringSupplier messageSupplier) {
+        if (object != null) {
+            throw new IllegalArgumentException(messageSupplier.get());
         }
     }
 
@@ -126,9 +164,21 @@ public class Assert {
         }
     }
 
-    public void notNull(Object object, Long code, Supplier<String> messageSupplier) {
+    public void notNull(Object object, Long code, StringSupplier messageSupplier) {
         if (object == null) {
             throw exceptionGenerator.apply(code, messageSupplier.get());
+        }
+    }
+
+    public static void notNull(Object object, String message) {
+        if (object == null) {
+            throw new IllegalArgumentException(message);
+        }
+    }
+
+    public static void notNull(Object object, StringSupplier messageSupplier) {
+        if (object == null) {
+            throw new IllegalArgumentException(messageSupplier.get());
         }
     }
 
@@ -156,9 +206,21 @@ public class Assert {
         }
     }
 
-    public void hasLength(String text, Long code, Supplier<String> messageSupplier) {
+    public void hasLength(String text, Long code, StringSupplier messageSupplier) {
         if (text == null || text.isEmpty()) {
             throw exceptionGenerator.apply(code, messageSupplier.get());
+        }
+    }
+
+    public static void hasLength(String text, String message) {
+        if (text == null || text.isEmpty()) {
+            throw new IllegalArgumentException(message);
+        }
+    }
+
+    public static void hasLength(String text, StringSupplier messageSupplier) {
+        if (text == null || text.isEmpty()) {
+            throw new IllegalArgumentException(messageSupplier.get());
         }
     }
 
@@ -186,9 +248,21 @@ public class Assert {
         }
     }
 
-    public void hasText(String text, Long code, Supplier<String> messageSupplier) {
+    public void hasText(String text, Long code, StringSupplier messageSupplier) {
         if (text == null || text.isEmpty() || !containsText(text)) {
             throw exceptionGenerator.apply(code, messageSupplier.get());
+        }
+    }
+
+    public static void hasText(String text, String message) {
+        if (text == null || text.isEmpty() || !containsText(text)) {
+            throw new IllegalArgumentException(message);
+        }
+    }
+
+    public static void hasText(String text, StringSupplier messageSupplier) {
+        if (text == null || text.isEmpty() || !containsText(text)) {
+            throw new IllegalArgumentException(messageSupplier.get());
         }
     }
 
@@ -216,9 +290,21 @@ public class Assert {
         }
     }
 
-    public void notEmpty(Object[] array, Long code, Supplier<String> messageSupplier) {
+    public void notEmpty(Object[] array, Long code, StringSupplier messageSupplier) {
         if (array == null || array.length == 0) {
             throw exceptionGenerator.apply(code, messageSupplier.get());
+        }
+    }
+
+    public static void notEmpty(Object[] array, String message) {
+        if (array == null || array.length == 0) {
+            throw new IllegalArgumentException(message);
+        }
+    }
+
+    public static void notEmpty(Object[] array, StringSupplier messageSupplier) {
+        if (array == null || array.length == 0) {
+            throw new IllegalArgumentException(messageSupplier.get());
         }
     }
 
@@ -246,9 +332,21 @@ public class Assert {
         }
     }
 
-    public void notEmpty(Collection<?> collection, Long code, Supplier<String> messageSupplier) {
+    public void notEmpty(Collection<?> collection, Long code, StringSupplier messageSupplier) {
         if (collection == null || collection.isEmpty()) {
             throw exceptionGenerator.apply(code, messageSupplier.get());
+        }
+    }
+
+    public static void notEmpty(Collection<?> collection, String message) {
+        if (collection == null || collection.isEmpty()) {
+            throw new IllegalArgumentException(message);
+        }
+    }
+
+    public static void notEmpty(Collection<?> collection, StringSupplier messageSupplier) {
+        if (collection == null || collection.isEmpty()) {
+            throw new IllegalArgumentException(messageSupplier.get());
         }
     }
 
@@ -276,9 +374,21 @@ public class Assert {
         }
     }
 
-    public void notEmpty(Map<?, ?> map, Long code, Supplier<String> messageSupplier) {
+    public void notEmpty(Map<?, ?> map, Long code, StringSupplier messageSupplier) {
         if (map == null || map.isEmpty()) {
             throw exceptionGenerator.apply(code, messageSupplier.get());
+        }
+    }
+
+    public static void notEmpty(Map<?, ?> map, String message) {
+        if (map == null || map.isEmpty()) {
+            throw new IllegalArgumentException(message);
+        }
+    }
+
+    public static void notEmpty(Map<?, ?> map, StringSupplier messageSupplier) {
+        if (map == null || map.isEmpty()) {
+            throw new IllegalArgumentException(messageSupplier.get());
         }
     }
 
