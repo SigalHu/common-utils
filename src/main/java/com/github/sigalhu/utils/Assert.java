@@ -2,6 +2,8 @@ package com.github.sigalhu.utils;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.function.BiFunction;
+import java.util.function.LongSupplier;
 import java.util.function.Supplier;
 
 /**
@@ -10,57 +12,279 @@ import java.util.function.Supplier;
  */
 public class Assert {
 
-    public static void isTrue(boolean expression, Supplier<RuntimeException> supplier) {
+    private BiFunction<Long, String, RuntimeException> exceptionGenerator;
+
+    public Assert(BiFunction<Long, String, RuntimeException> exceptionGenerator) {
+        this.exceptionGenerator = exceptionGenerator;
+    }
+
+    public void isTrue(boolean expression, Long code) {
         if (!expression) {
-            throw supplier.get();
+            throw exceptionGenerator.apply(code, null);
         }
     }
 
-    public static void isFalse(boolean expression, Supplier<RuntimeException> supplier) {
+    public void isTrue(boolean expression, LongSupplier codeSupplier) {
+        if (!expression) {
+            throw exceptionGenerator.apply(codeSupplier.getAsLong(), null);
+        }
+    }
+
+    public void isTrue(boolean expression, Long code, String message) {
+        if (!expression) {
+            throw exceptionGenerator.apply(code, message);
+        }
+    }
+
+    public void isTrue(boolean expression, Long code, Supplier<String> messageSupplier) {
+        if (!expression) {
+            throw exceptionGenerator.apply(code, messageSupplier.get());
+        }
+    }
+
+    public static void isTrue(boolean expression, Supplier<RuntimeException> exceptionSupplier) {
+        if (!expression) {
+            throw exceptionSupplier.get();
+        }
+    }
+
+    public void isFalse(boolean expression, Long code) {
         if (expression) {
-            throw supplier.get();
+            throw exceptionGenerator.apply(code, null);
         }
     }
 
-    public static void isNull(Object object, Supplier<RuntimeException> supplier) {
+    public void isFalse(boolean expression, LongSupplier codeSupplier) {
+        if (expression) {
+            throw exceptionGenerator.apply(codeSupplier.getAsLong(), null);
+        }
+    }
+
+    public void isFalse(boolean expression, Long code, String message) {
+        if (expression) {
+            throw exceptionGenerator.apply(code, message);
+        }
+    }
+
+    public void isFalse(boolean expression, Long code, Supplier<String> messageSupplier) {
+        if (expression) {
+            throw exceptionGenerator.apply(code, messageSupplier.get());
+        }
+    }
+
+    public static void isFalse(boolean expression, Supplier<RuntimeException> exceptionSupplier) {
+        if (expression) {
+            throw exceptionSupplier.get();
+        }
+    }
+
+    public void isNull(Object object, Long code) {
         if (object != null) {
-            throw supplier.get();
+            throw exceptionGenerator.apply(code, null);
         }
     }
 
-    public static void notNull(Object object, Supplier<RuntimeException> supplier) {
+    public void isNull(Object object, LongSupplier codeSupplier) {
+        if (object != null) {
+            throw exceptionGenerator.apply(codeSupplier.getAsLong(), null);
+        }
+    }
+
+    public void isNull(Object object, Long code, String message) {
+        if (object != null) {
+            throw exceptionGenerator.apply(code, message);
+        }
+    }
+
+    public void isNull(Object object, Long code, Supplier<String> messageSupplier) {
+        if (object != null) {
+            throw exceptionGenerator.apply(code, messageSupplier.get());
+        }
+    }
+
+    public static void isNull(Object object, Supplier<RuntimeException> exceptionSupplier) {
+        if (object != null) {
+            throw exceptionSupplier.get();
+        }
+    }
+
+    public void notNull(Object object, Long code) {
         if (object == null) {
-            throw supplier.get();
+            throw exceptionGenerator.apply(code, null);
         }
     }
 
-    public static void hasLength(String text, Supplier<RuntimeException> supplier) {
+    public void notNull(Object object, LongSupplier codeSupplier) {
+        if (object == null) {
+            throw exceptionGenerator.apply(codeSupplier.getAsLong(), null);
+        }
+    }
+
+    public void notNull(Object object, Long code, String message) {
+        if (object == null) {
+            throw exceptionGenerator.apply(code, message);
+        }
+    }
+
+    public void notNull(Object object, Long code, Supplier<String> messageSupplier) {
+        if (object == null) {
+            throw exceptionGenerator.apply(code, messageSupplier.get());
+        }
+    }
+
+    public static void notNull(Object object, Supplier<RuntimeException> exceptionSupplier) {
+        if (object == null) {
+            throw exceptionSupplier.get();
+        }
+    }
+
+    public void hasLength(String text, Long code) {
         if (text == null || text.isEmpty()) {
-            throw supplier.get();
+            throw exceptionGenerator.apply(code, null);
         }
     }
 
-    public static void hasText(String text, Supplier<RuntimeException> supplier) {
+    public void hasLength(String text, LongSupplier codeSupplier) {
+        if (text == null || text.isEmpty()) {
+            throw exceptionGenerator.apply(codeSupplier.getAsLong(), null);
+        }
+    }
+
+    public void hasLength(String text, Long code, String message) {
+        if (text == null || text.isEmpty()) {
+            throw exceptionGenerator.apply(code, message);
+        }
+    }
+
+    public void hasLength(String text, Long code, Supplier<String> messageSupplier) {
+        if (text == null || text.isEmpty()) {
+            throw exceptionGenerator.apply(code, messageSupplier.get());
+        }
+    }
+
+    public static void hasLength(String text, Supplier<RuntimeException> exceptionSupplier) {
+        if (text == null || text.isEmpty()) {
+            throw exceptionSupplier.get();
+        }
+    }
+
+    public void hasText(String text, Long code) {
         if (text == null || text.isEmpty() || !containsText(text)) {
-            throw supplier.get();
+            throw exceptionGenerator.apply(code, null);
         }
     }
 
-    public static void notEmpty(Object[] array, Supplier<RuntimeException> supplier) {
+    public void hasText(String text, LongSupplier codeSupplier) {
+        if (text == null || text.isEmpty() || !containsText(text)) {
+            throw exceptionGenerator.apply(codeSupplier.getAsLong(), null);
+        }
+    }
+
+    public void hasText(String text, Long code, String message) {
+        if (text == null || text.isEmpty() || !containsText(text)) {
+            throw exceptionGenerator.apply(code, message);
+        }
+    }
+
+    public void hasText(String text, Long code, Supplier<String> messageSupplier) {
+        if (text == null || text.isEmpty() || !containsText(text)) {
+            throw exceptionGenerator.apply(code, messageSupplier.get());
+        }
+    }
+
+    public static void hasText(String text, Supplier<RuntimeException> exceptionSupplier) {
+        if (text == null || text.isEmpty() || !containsText(text)) {
+            throw exceptionSupplier.get();
+        }
+    }
+
+    public void notEmpty(Object[] array, Long code) {
         if (array == null || array.length == 0) {
-            throw supplier.get();
+            throw exceptionGenerator.apply(code, null);
         }
     }
 
-    public static void notEmpty(Collection<?> collection, Supplier<RuntimeException> supplier) {
+    public void notEmpty(Object[] array, LongSupplier codeSupplier) {
+        if (array == null || array.length == 0) {
+            throw exceptionGenerator.apply(codeSupplier.getAsLong(), null);
+        }
+    }
+
+    public void notEmpty(Object[] array, Long code, String message) {
+        if (array == null || array.length == 0) {
+            throw exceptionGenerator.apply(code, message);
+        }
+    }
+
+    public void notEmpty(Object[] array, Long code, Supplier<String> messageSupplier) {
+        if (array == null || array.length == 0) {
+            throw exceptionGenerator.apply(code, messageSupplier.get());
+        }
+    }
+
+    public static void notEmpty(Object[] array, Supplier<RuntimeException> exceptionSupplier) {
+        if (array == null || array.length == 0) {
+            throw exceptionSupplier.get();
+        }
+    }
+
+    public void notEmpty(Collection<?> collection, Long code) {
         if (collection == null || collection.isEmpty()) {
-            throw supplier.get();
+            throw exceptionGenerator.apply(code, null);
         }
     }
 
-    public static void notEmpty(Map<?, ?> map, Supplier<RuntimeException> supplier) {
+    public void notEmpty(Collection<?> collection, LongSupplier codeSupplier) {
+        if (collection == null || collection.isEmpty()) {
+            throw exceptionGenerator.apply(codeSupplier.getAsLong(), null);
+        }
+    }
+
+    public void notEmpty(Collection<?> collection, Long code, String message) {
+        if (collection == null || collection.isEmpty()) {
+            throw exceptionGenerator.apply(code, message);
+        }
+    }
+
+    public void notEmpty(Collection<?> collection, Long code, Supplier<String> messageSupplier) {
+        if (collection == null || collection.isEmpty()) {
+            throw exceptionGenerator.apply(code, messageSupplier.get());
+        }
+    }
+
+    public static void notEmpty(Collection<?> collection, Supplier<RuntimeException> exceptionSupplier) {
+        if (collection == null || collection.isEmpty()) {
+            throw exceptionSupplier.get();
+        }
+    }
+
+    public void notEmpty(Map<?, ?> map, Long code) {
         if (map == null || map.isEmpty()) {
-            throw supplier.get();
+            throw exceptionGenerator.apply(code, null);
+        }
+    }
+
+    public void notEmpty(Map<?, ?> map, LongSupplier codeSupplier) {
+        if (map == null || map.isEmpty()) {
+            throw exceptionGenerator.apply(codeSupplier.getAsLong(), null);
+        }
+    }
+
+    public void notEmpty(Map<?, ?> map, Long code, String message) {
+        if (map == null || map.isEmpty()) {
+            throw exceptionGenerator.apply(code, message);
+        }
+    }
+
+    public void notEmpty(Map<?, ?> map, Long code, Supplier<String> messageSupplier) {
+        if (map == null || map.isEmpty()) {
+            throw exceptionGenerator.apply(code, messageSupplier.get());
+        }
+    }
+
+    public static void notEmpty(Map<?, ?> map, Supplier<RuntimeException> exceptionSupplier) {
+        if (map == null || map.isEmpty()) {
+            throw exceptionSupplier.get();
         }
     }
 
