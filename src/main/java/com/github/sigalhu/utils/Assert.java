@@ -17,7 +17,8 @@ public class Assert {
     private BiFunction<Long, String, RuntimeException> exceptionGenerator;
 
     public Assert(BiFunction<Long, String, RuntimeException> exceptionGenerator) {
-        this.exceptionGenerator = exceptionGenerator;
+        this.exceptionGenerator = exceptionGenerator != null ?
+                exceptionGenerator : (code, message) -> new IllegalArgumentException(message);
     }
 
     public void isTrue(boolean expression, Long code) {
@@ -28,7 +29,7 @@ public class Assert {
 
     public void isTrue(boolean expression, LongSupplier codeSupplier) {
         if (!expression) {
-            throw exceptionGenerator.apply(codeSupplier.getAsLong(), null);
+            throw exceptionGenerator.apply(safeGetCode(codeSupplier), null);
         }
     }
 
@@ -40,7 +41,7 @@ public class Assert {
 
     public void isTrue(boolean expression, Long code, StringSupplier messageSupplier) {
         if (!expression) {
-            throw exceptionGenerator.apply(code, messageSupplier.get());
+            throw exceptionGenerator.apply(code, safeGetMessage(messageSupplier));
         }
     }
 
@@ -52,13 +53,13 @@ public class Assert {
 
     public static void isTrue(boolean expression, StringSupplier messageSupplier) {
         if (!expression) {
-            throw new IllegalArgumentException(messageSupplier.get());
+            throw new IllegalArgumentException(safeGetMessage(messageSupplier));
         }
     }
 
     public static void isTrue(boolean expression, Supplier<RuntimeException> exceptionSupplier) {
         if (!expression) {
-            throw exceptionSupplier.get();
+            throw safeGetException(exceptionSupplier);
         }
     }
 
@@ -70,7 +71,7 @@ public class Assert {
 
     public void isFalse(boolean expression, LongSupplier codeSupplier) {
         if (expression) {
-            throw exceptionGenerator.apply(codeSupplier.getAsLong(), null);
+            throw exceptionGenerator.apply(safeGetCode(codeSupplier), null);
         }
     }
 
@@ -82,7 +83,7 @@ public class Assert {
 
     public void isFalse(boolean expression, Long code, StringSupplier messageSupplier) {
         if (expression) {
-            throw exceptionGenerator.apply(code, messageSupplier.get());
+            throw exceptionGenerator.apply(code, safeGetMessage(messageSupplier));
         }
     }
 
@@ -94,13 +95,13 @@ public class Assert {
 
     public static void isFalse(boolean expression, StringSupplier messageSupplier) {
         if (expression) {
-            throw new IllegalArgumentException(messageSupplier.get());
+            throw new IllegalArgumentException(safeGetMessage(messageSupplier));
         }
     }
 
     public static void isFalse(boolean expression, Supplier<RuntimeException> exceptionSupplier) {
         if (expression) {
-            throw exceptionSupplier.get();
+            throw safeGetException(exceptionSupplier);
         }
     }
 
@@ -112,7 +113,7 @@ public class Assert {
 
     public void isNull(Object object, LongSupplier codeSupplier) {
         if (object != null) {
-            throw exceptionGenerator.apply(codeSupplier.getAsLong(), null);
+            throw exceptionGenerator.apply(safeGetCode(codeSupplier), null);
         }
     }
 
@@ -124,7 +125,7 @@ public class Assert {
 
     public void isNull(Object object, Long code, StringSupplier messageSupplier) {
         if (object != null) {
-            throw exceptionGenerator.apply(code, messageSupplier.get());
+            throw exceptionGenerator.apply(code, safeGetMessage(messageSupplier));
         }
     }
 
@@ -136,13 +137,13 @@ public class Assert {
 
     public static void isNull(Object object, StringSupplier messageSupplier) {
         if (object != null) {
-            throw new IllegalArgumentException(messageSupplier.get());
+            throw new IllegalArgumentException(safeGetMessage(messageSupplier));
         }
     }
 
     public static void isNull(Object object, Supplier<RuntimeException> exceptionSupplier) {
         if (object != null) {
-            throw exceptionSupplier.get();
+            throw safeGetException(exceptionSupplier);
         }
     }
 
@@ -154,7 +155,7 @@ public class Assert {
 
     public void notNull(Object object, LongSupplier codeSupplier) {
         if (object == null) {
-            throw exceptionGenerator.apply(codeSupplier.getAsLong(), null);
+            throw exceptionGenerator.apply(safeGetCode(codeSupplier), null);
         }
     }
 
@@ -166,7 +167,7 @@ public class Assert {
 
     public void notNull(Object object, Long code, StringSupplier messageSupplier) {
         if (object == null) {
-            throw exceptionGenerator.apply(code, messageSupplier.get());
+            throw exceptionGenerator.apply(code, safeGetMessage(messageSupplier));
         }
     }
 
@@ -178,13 +179,13 @@ public class Assert {
 
     public static void notNull(Object object, StringSupplier messageSupplier) {
         if (object == null) {
-            throw new IllegalArgumentException(messageSupplier.get());
+            throw new IllegalArgumentException(safeGetMessage(messageSupplier));
         }
     }
 
     public static void notNull(Object object, Supplier<RuntimeException> exceptionSupplier) {
         if (object == null) {
-            throw exceptionSupplier.get();
+            throw safeGetException(exceptionSupplier);
         }
     }
 
@@ -196,7 +197,7 @@ public class Assert {
 
     public void hasLength(String text, LongSupplier codeSupplier) {
         if (text == null || text.isEmpty()) {
-            throw exceptionGenerator.apply(codeSupplier.getAsLong(), null);
+            throw exceptionGenerator.apply(safeGetCode(codeSupplier), null);
         }
     }
 
@@ -208,7 +209,7 @@ public class Assert {
 
     public void hasLength(String text, Long code, StringSupplier messageSupplier) {
         if (text == null || text.isEmpty()) {
-            throw exceptionGenerator.apply(code, messageSupplier.get());
+            throw exceptionGenerator.apply(code, safeGetMessage(messageSupplier));
         }
     }
 
@@ -220,13 +221,13 @@ public class Assert {
 
     public static void hasLength(String text, StringSupplier messageSupplier) {
         if (text == null || text.isEmpty()) {
-            throw new IllegalArgumentException(messageSupplier.get());
+            throw new IllegalArgumentException(safeGetMessage(messageSupplier));
         }
     }
 
     public static void hasLength(String text, Supplier<RuntimeException> exceptionSupplier) {
         if (text == null || text.isEmpty()) {
-            throw exceptionSupplier.get();
+            throw safeGetException(exceptionSupplier);
         }
     }
 
@@ -238,7 +239,7 @@ public class Assert {
 
     public void hasText(String text, LongSupplier codeSupplier) {
         if (text == null || text.isEmpty() || !containsText(text)) {
-            throw exceptionGenerator.apply(codeSupplier.getAsLong(), null);
+            throw exceptionGenerator.apply(safeGetCode(codeSupplier), null);
         }
     }
 
@@ -250,7 +251,7 @@ public class Assert {
 
     public void hasText(String text, Long code, StringSupplier messageSupplier) {
         if (text == null || text.isEmpty() || !containsText(text)) {
-            throw exceptionGenerator.apply(code, messageSupplier.get());
+            throw exceptionGenerator.apply(code, safeGetMessage(messageSupplier));
         }
     }
 
@@ -262,13 +263,13 @@ public class Assert {
 
     public static void hasText(String text, StringSupplier messageSupplier) {
         if (text == null || text.isEmpty() || !containsText(text)) {
-            throw new IllegalArgumentException(messageSupplier.get());
+            throw new IllegalArgumentException(safeGetMessage(messageSupplier));
         }
     }
 
     public static void hasText(String text, Supplier<RuntimeException> exceptionSupplier) {
         if (text == null || text.isEmpty() || !containsText(text)) {
-            throw exceptionSupplier.get();
+            throw safeGetException(exceptionSupplier);
         }
     }
 
@@ -280,7 +281,7 @@ public class Assert {
 
     public void notEmpty(Object[] array, LongSupplier codeSupplier) {
         if (array == null || array.length == 0) {
-            throw exceptionGenerator.apply(codeSupplier.getAsLong(), null);
+            throw exceptionGenerator.apply(safeGetCode(codeSupplier), null);
         }
     }
 
@@ -292,7 +293,7 @@ public class Assert {
 
     public void notEmpty(Object[] array, Long code, StringSupplier messageSupplier) {
         if (array == null || array.length == 0) {
-            throw exceptionGenerator.apply(code, messageSupplier.get());
+            throw exceptionGenerator.apply(code, safeGetMessage(messageSupplier));
         }
     }
 
@@ -304,13 +305,13 @@ public class Assert {
 
     public static void notEmpty(Object[] array, StringSupplier messageSupplier) {
         if (array == null || array.length == 0) {
-            throw new IllegalArgumentException(messageSupplier.get());
+            throw new IllegalArgumentException(safeGetMessage(messageSupplier));
         }
     }
 
     public static void notEmpty(Object[] array, Supplier<RuntimeException> exceptionSupplier) {
         if (array == null || array.length == 0) {
-            throw exceptionSupplier.get();
+            throw safeGetException(exceptionSupplier);
         }
     }
 
@@ -322,7 +323,7 @@ public class Assert {
 
     public void notEmpty(Collection<?> collection, LongSupplier codeSupplier) {
         if (collection == null || collection.isEmpty()) {
-            throw exceptionGenerator.apply(codeSupplier.getAsLong(), null);
+            throw exceptionGenerator.apply(safeGetCode(codeSupplier), null);
         }
     }
 
@@ -334,7 +335,7 @@ public class Assert {
 
     public void notEmpty(Collection<?> collection, Long code, StringSupplier messageSupplier) {
         if (collection == null || collection.isEmpty()) {
-            throw exceptionGenerator.apply(code, messageSupplier.get());
+            throw exceptionGenerator.apply(code, safeGetMessage(messageSupplier));
         }
     }
 
@@ -346,13 +347,13 @@ public class Assert {
 
     public static void notEmpty(Collection<?> collection, StringSupplier messageSupplier) {
         if (collection == null || collection.isEmpty()) {
-            throw new IllegalArgumentException(messageSupplier.get());
+            throw new IllegalArgumentException(safeGetMessage(messageSupplier));
         }
     }
 
     public static void notEmpty(Collection<?> collection, Supplier<RuntimeException> exceptionSupplier) {
         if (collection == null || collection.isEmpty()) {
-            throw exceptionSupplier.get();
+            throw safeGetException(exceptionSupplier);
         }
     }
 
@@ -364,7 +365,7 @@ public class Assert {
 
     public void notEmpty(Map<?, ?> map, LongSupplier codeSupplier) {
         if (map == null || map.isEmpty()) {
-            throw exceptionGenerator.apply(codeSupplier.getAsLong(), null);
+            throw exceptionGenerator.apply(safeGetCode(codeSupplier), null);
         }
     }
 
@@ -376,7 +377,7 @@ public class Assert {
 
     public void notEmpty(Map<?, ?> map, Long code, StringSupplier messageSupplier) {
         if (map == null || map.isEmpty()) {
-            throw exceptionGenerator.apply(code, messageSupplier.get());
+            throw exceptionGenerator.apply(code, safeGetMessage(messageSupplier));
         }
     }
 
@@ -388,13 +389,13 @@ public class Assert {
 
     public static void notEmpty(Map<?, ?> map, StringSupplier messageSupplier) {
         if (map == null || map.isEmpty()) {
-            throw new IllegalArgumentException(messageSupplier.get());
+            throw new IllegalArgumentException(safeGetMessage(messageSupplier));
         }
     }
 
     public static void notEmpty(Map<?, ?> map, Supplier<RuntimeException> exceptionSupplier) {
         if (map == null || map.isEmpty()) {
-            throw exceptionSupplier.get();
+            throw safeGetException(exceptionSupplier);
         }
     }
 
@@ -406,5 +407,19 @@ public class Assert {
             }
         }
         return false;
+    }
+
+    private static Long safeGetCode(LongSupplier codeSupplier) {
+        return codeSupplier == null ? null : codeSupplier.getAsLong();
+    }
+
+    private static String safeGetMessage(StringSupplier messageSupplier) {
+        return messageSupplier == null ? null : messageSupplier.get();
+    }
+
+    private static RuntimeException safeGetException(Supplier<RuntimeException> exceptionSupplier) {
+        RuntimeException exception;
+        return exceptionSupplier == null ? new IllegalArgumentException() :
+                (exception = exceptionSupplier.get()) == null ? new IllegalArgumentException() : exception;
     }
 }
