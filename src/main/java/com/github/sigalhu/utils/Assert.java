@@ -1,6 +1,10 @@
 package com.github.sigalhu.utils;
 
 import com.github.sigalhu.function.base.StringSupplier;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collection;
 import java.util.Map;
@@ -190,223 +194,213 @@ public class Assert {
     }
 
     public void hasLength(String text, Long code) {
-        if (text == null || text.isEmpty()) {
+        if (StringUtils.isEmpty(text)) {
             throw exceptionGenerator.apply(code, null);
         }
     }
 
     public void hasLength(String text, LongSupplier codeSupplier) {
-        if (text == null || text.isEmpty()) {
+        if (StringUtils.isEmpty(text)) {
             throw exceptionGenerator.apply(safeGetCode(codeSupplier), null);
         }
     }
 
     public void hasLength(String text, Long code, String message) {
-        if (text == null || text.isEmpty()) {
+        if (StringUtils.isEmpty(text)) {
             throw exceptionGenerator.apply(code, message);
         }
     }
 
     public void hasLength(String text, Long code, StringSupplier messageSupplier) {
-        if (text == null || text.isEmpty()) {
+        if (StringUtils.isEmpty(text)) {
             throw exceptionGenerator.apply(code, safeGetMessage(messageSupplier));
         }
     }
 
     public static void hasLength(String text, String message) {
-        if (text == null || text.isEmpty()) {
+        if (StringUtils.isEmpty(text)) {
             throw new IllegalArgumentException(message);
         }
     }
 
     public static void hasLength(String text, StringSupplier messageSupplier) {
-        if (text == null || text.isEmpty()) {
+        if (StringUtils.isEmpty(text)) {
             throw new IllegalArgumentException(safeGetMessage(messageSupplier));
         }
     }
 
     public static void hasLength(String text, Supplier<RuntimeException> exceptionSupplier) {
-        if (text == null || text.isEmpty()) {
+        if (StringUtils.isEmpty(text)) {
             throw safeGetException(exceptionSupplier);
         }
     }
 
     public void hasText(String text, Long code) {
-        if (text == null || text.isEmpty() || !containsText(text)) {
+        if (StringUtils.isBlank(text)) {
             throw exceptionGenerator.apply(code, null);
         }
     }
 
     public void hasText(String text, LongSupplier codeSupplier) {
-        if (text == null || text.isEmpty() || !containsText(text)) {
+        if (StringUtils.isBlank(text)) {
             throw exceptionGenerator.apply(safeGetCode(codeSupplier), null);
         }
     }
 
     public void hasText(String text, Long code, String message) {
-        if (text == null || text.isEmpty() || !containsText(text)) {
+        if (StringUtils.isBlank(text)) {
             throw exceptionGenerator.apply(code, message);
         }
     }
 
     public void hasText(String text, Long code, StringSupplier messageSupplier) {
-        if (text == null || text.isEmpty() || !containsText(text)) {
+        if (StringUtils.isBlank(text)) {
             throw exceptionGenerator.apply(code, safeGetMessage(messageSupplier));
         }
     }
 
     public static void hasText(String text, String message) {
-        if (text == null || text.isEmpty() || !containsText(text)) {
+        if (StringUtils.isBlank(text)) {
             throw new IllegalArgumentException(message);
         }
     }
 
     public static void hasText(String text, StringSupplier messageSupplier) {
-        if (text == null || text.isEmpty() || !containsText(text)) {
+        if (StringUtils.isBlank(text)) {
             throw new IllegalArgumentException(safeGetMessage(messageSupplier));
         }
     }
 
     public static void hasText(String text, Supplier<RuntimeException> exceptionSupplier) {
-        if (text == null || text.isEmpty() || !containsText(text)) {
+        if (StringUtils.isBlank(text)) {
             throw safeGetException(exceptionSupplier);
         }
     }
 
     public void notEmpty(Object[] array, Long code) {
-        if (array == null || array.length == 0) {
+        if (ArrayUtils.isEmpty(array)) {
             throw exceptionGenerator.apply(code, null);
         }
     }
 
     public void notEmpty(Object[] array, LongSupplier codeSupplier) {
-        if (array == null || array.length == 0) {
+        if (ArrayUtils.isEmpty(array)) {
             throw exceptionGenerator.apply(safeGetCode(codeSupplier), null);
         }
     }
 
     public void notEmpty(Object[] array, Long code, String message) {
-        if (array == null || array.length == 0) {
+        if (ArrayUtils.isEmpty(array)) {
             throw exceptionGenerator.apply(code, message);
         }
     }
 
     public void notEmpty(Object[] array, Long code, StringSupplier messageSupplier) {
-        if (array == null || array.length == 0) {
+        if (ArrayUtils.isEmpty(array)) {
             throw exceptionGenerator.apply(code, safeGetMessage(messageSupplier));
         }
     }
 
     public static void notEmpty(Object[] array, String message) {
-        if (array == null || array.length == 0) {
+        if (ArrayUtils.isEmpty(array)) {
             throw new IllegalArgumentException(message);
         }
     }
 
     public static void notEmpty(Object[] array, StringSupplier messageSupplier) {
-        if (array == null || array.length == 0) {
+        if (ArrayUtils.isEmpty(array)) {
             throw new IllegalArgumentException(safeGetMessage(messageSupplier));
         }
     }
 
     public static void notEmpty(Object[] array, Supplier<RuntimeException> exceptionSupplier) {
-        if (array == null || array.length == 0) {
+        if (ArrayUtils.isEmpty(array)) {
             throw safeGetException(exceptionSupplier);
         }
     }
 
     public void notEmpty(Collection<?> collection, Long code) {
-        if (collection == null || collection.isEmpty()) {
+        if (CollectionUtils.isEmpty(collection)) {
             throw exceptionGenerator.apply(code, null);
         }
     }
 
     public void notEmpty(Collection<?> collection, LongSupplier codeSupplier) {
-        if (collection == null || collection.isEmpty()) {
+        if (CollectionUtils.isEmpty(collection)) {
             throw exceptionGenerator.apply(safeGetCode(codeSupplier), null);
         }
     }
 
     public void notEmpty(Collection<?> collection, Long code, String message) {
-        if (collection == null || collection.isEmpty()) {
+        if (CollectionUtils.isEmpty(collection)) {
             throw exceptionGenerator.apply(code, message);
         }
     }
 
     public void notEmpty(Collection<?> collection, Long code, StringSupplier messageSupplier) {
-        if (collection == null || collection.isEmpty()) {
+        if (CollectionUtils.isEmpty(collection)) {
             throw exceptionGenerator.apply(code, safeGetMessage(messageSupplier));
         }
     }
 
     public static void notEmpty(Collection<?> collection, String message) {
-        if (collection == null || collection.isEmpty()) {
+        if (CollectionUtils.isEmpty(collection)) {
             throw new IllegalArgumentException(message);
         }
     }
 
     public static void notEmpty(Collection<?> collection, StringSupplier messageSupplier) {
-        if (collection == null || collection.isEmpty()) {
+        if (CollectionUtils.isEmpty(collection)) {
             throw new IllegalArgumentException(safeGetMessage(messageSupplier));
         }
     }
 
     public static void notEmpty(Collection<?> collection, Supplier<RuntimeException> exceptionSupplier) {
-        if (collection == null || collection.isEmpty()) {
+        if (CollectionUtils.isEmpty(collection)) {
             throw safeGetException(exceptionSupplier);
         }
     }
 
     public void notEmpty(Map<?, ?> map, Long code) {
-        if (map == null || map.isEmpty()) {
+        if (MapUtils.isEmpty(map)) {
             throw exceptionGenerator.apply(code, null);
         }
     }
 
     public void notEmpty(Map<?, ?> map, LongSupplier codeSupplier) {
-        if (map == null || map.isEmpty()) {
+        if (MapUtils.isEmpty(map)) {
             throw exceptionGenerator.apply(safeGetCode(codeSupplier), null);
         }
     }
 
     public void notEmpty(Map<?, ?> map, Long code, String message) {
-        if (map == null || map.isEmpty()) {
+        if (MapUtils.isEmpty(map)) {
             throw exceptionGenerator.apply(code, message);
         }
     }
 
     public void notEmpty(Map<?, ?> map, Long code, StringSupplier messageSupplier) {
-        if (map == null || map.isEmpty()) {
+        if (MapUtils.isEmpty(map)) {
             throw exceptionGenerator.apply(code, safeGetMessage(messageSupplier));
         }
     }
 
     public static void notEmpty(Map<?, ?> map, String message) {
-        if (map == null || map.isEmpty()) {
+        if (MapUtils.isEmpty(map)) {
             throw new IllegalArgumentException(message);
         }
     }
 
     public static void notEmpty(Map<?, ?> map, StringSupplier messageSupplier) {
-        if (map == null || map.isEmpty()) {
+        if (MapUtils.isEmpty(map)) {
             throw new IllegalArgumentException(safeGetMessage(messageSupplier));
         }
     }
 
     public static void notEmpty(Map<?, ?> map, Supplier<RuntimeException> exceptionSupplier) {
-        if (map == null || map.isEmpty()) {
+        if (MapUtils.isEmpty(map)) {
             throw safeGetException(exceptionSupplier);
         }
-    }
-
-    private static boolean containsText(CharSequence str) {
-        int strLen = str.length();
-        for (int i = 0; i < strLen; i++) {
-            if (!Character.isWhitespace(str.charAt(i))) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private static Long safeGetCode(LongSupplier codeSupplier) {
