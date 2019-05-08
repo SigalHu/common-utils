@@ -22,7 +22,7 @@ public class PipelineProcessor<T> implements Processor<T> {
     private String name = "default-pipeline-processor";
 
     @Setter
-    private List<Processor<T>> processors;
+    private List<Processor<? super T>> processors;
 
     @Override
     public ProcessorResult handle(T context) {
@@ -31,7 +31,7 @@ public class PipelineProcessor<T> implements Processor<T> {
             return ProcessorResult.SUCCESS;
         }
 
-        for (Processor<T> processor : processors) {
+        for (Processor<? super T> processor : processors) {
             try {
                 if (processor.skip(context)) {
                     continue;
