@@ -111,11 +111,11 @@ public class MetricCalculator {
         return Optional.of(currentValue - lastValue);
     }
 
-    public static Optional<Float> sum(Float... values) {
+    public static Optional<Double> sum(Float... values) {
         if (ArrayUtils.isEmpty(values)) {
             return Optional.empty();
         }
-        float sum = 0F;
+        double sum = 0F;
         boolean allNull = true;
         for (Float value : values) {
             if (Objects.nonNull(value)) {
@@ -141,11 +141,11 @@ public class MetricCalculator {
         return Optional.ofNullable(allNull ? null : sum);
     }
 
-    public static Optional<Byte> sum(Byte... values) {
+    public static Optional<Long> sum(Byte... values) {
         if (ArrayUtils.isEmpty(values)) {
             return Optional.empty();
         }
-        byte sum = 0;
+        long sum = 0;
         boolean allNull = true;
         for (Byte value : values) {
             if (Objects.nonNull(value)) {
@@ -156,11 +156,11 @@ public class MetricCalculator {
         return Optional.ofNullable(allNull ? null : sum);
     }
 
-    public static Optional<Short> sum(Short... values) {
+    public static Optional<Long> sum(Short... values) {
         if (ArrayUtils.isEmpty(values)) {
             return Optional.empty();
         }
-        short sum = 0;
+        long sum = 0;
         boolean allNull = true;
         for (Short value : values) {
             if (Objects.nonNull(value)) {
@@ -171,11 +171,11 @@ public class MetricCalculator {
         return Optional.ofNullable(allNull ? null : sum);
     }
 
-    public static Optional<Integer> sum(Integer... values) {
+    public static Optional<Long> sum(Integer... values) {
         if (ArrayUtils.isEmpty(values)) {
             return Optional.empty();
         }
-        int sum = 0;
+        long sum = 0;
         boolean allNull = true;
         for (Integer value : values) {
             if (Objects.nonNull(value)) {
