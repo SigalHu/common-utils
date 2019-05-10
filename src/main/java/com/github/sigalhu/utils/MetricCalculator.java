@@ -69,6 +69,41 @@ public class MetricCalculator {
         return Optional.of(l / c);
     }
 
+    public static Optional<Double> incr(Float lastValue, Float currentValue) {
+        if (Objects.isNull(lastValue) || Objects.isNull(currentValue)) {
+            return Optional.empty();
+        }
+        return Optional.of(currentValue.doubleValue() - lastValue.doubleValue());
+    }
+
+    public static Optional<Double> incr(Double lastValue, Double currentValue) {
+        if (Objects.isNull(lastValue) || Objects.isNull(currentValue)) {
+            return Optional.empty();
+        }
+        return Optional.of(currentValue - lastValue);
+    }
+
+    public static Optional<Long> incr(Byte lastValue, Byte currentValue) {
+        if (Objects.isNull(lastValue) || Objects.isNull(currentValue)) {
+            return Optional.empty();
+        }
+        return Optional.of(currentValue.longValue() - lastValue.longValue());
+    }
+
+    public static Optional<Long> incr(Short lastValue, Short currentValue) {
+        if (Objects.isNull(lastValue) || Objects.isNull(currentValue)) {
+            return Optional.empty();
+        }
+        return Optional.of(currentValue.longValue() - lastValue.longValue());
+    }
+
+    public static Optional<Long> incr(Integer lastValue, Integer currentValue) {
+        if (Objects.isNull(lastValue) || Objects.isNull(currentValue)) {
+            return Optional.empty();
+        }
+        return Optional.of(currentValue.longValue() - lastValue.longValue());
+    }
+
     public static Optional<Long> incr(Long lastValue, Long currentValue) {
         if (Objects.isNull(lastValue) || Objects.isNull(currentValue)) {
             return Optional.empty();
