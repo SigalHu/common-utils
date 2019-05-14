@@ -1,5 +1,6 @@
 package com.github.sigalhu.generator.id;
 
+import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
@@ -8,7 +9,7 @@ import java.util.function.Function;
  * @author huxujun
  * @date 2019-04-22
  */
-public class WeakUniqueIdGenerator extends BaseIdGenerator {
+public class UniqueIdGenerator extends BaseIdGenerator {
 
     /**
      * 进程id递增
@@ -44,6 +45,7 @@ public class WeakUniqueIdGenerator extends BaseIdGenerator {
      */
     private static final AtomicLong NEXT_TID = new AtomicLong(0);
     private static final int[] TID_SEQ = new int[(int) TID_MAX + 1];
+    private static final AtomicLong[] NUM_SEQ = new AtomicLong[(int) TID_MAX + 1];
 
     static {
         for (int tid = 0; tid <= TID_MAX; tid++) {
@@ -59,15 +61,18 @@ public class WeakUniqueIdGenerator extends BaseIdGenerator {
             TID_SEQ[bound - 1] = TID_SEQ[idx];
             TID_SEQ[idx] = tmp;
         }
+
+        Arrays.fill(NUM_SEQ, new AtomicLong(0));
     }
 
     private final long PID;
+    private volatile long current = System.currentTimeMillis();
 
-    public WeakUniqueIdGenerator(Function<String, Long> incrOperate) {
+    public UniqueIdGenerator(Function<String, Long> incrOperate) {
         PID = (incrOperate.apply(NEXT_PID_KEY) & PID_MAX) << (NUM_BITS + TID_BITS);
     }
 
-    public WeakUniqueIdGenerator(Function<String, Long> incrOperate, String appName) {
+    public UniqueIdGenerator(Function<String, Long> incrOperate, String appName) {
         PID = (incrOperate.apply(NEXT_PID_KEY + ":" + appName) & PID_MAX) << (NUM_BITS + TID_BITS);
     }
 
@@ -81,9 +86,23 @@ public class WeakUniqueIdGenerator extends BaseIdGenerator {
      */
     @Override
     public long nextId() {
-        long ms = ((System.currentTimeMillis() - TIMESTAMP_START) & MILLIS_MAX) << (NUM_BITS + TID_BITS + PID_BITS);
-        long num = NEXT_TID.getAndIncrement() & TID_MAX;
-        long tid = TID_SEQ[(int) num] << NUM_BITS;
-        return ms | PID | tid | num;
+        long ms, idx, tid, num, c;
+        for (;;) {
+            if ((ms = System.currentTimeMillis()) > (c = current)) {
+                synchronized (this) {
+                    if (c == current) {
+                        current = ms;
+                        Arrays.fill(NUM_SEQ, new AtomicLong(0));
+                    }
+                }
+            }
+            ms = ((current - TIMESTAMP_START) & MILLIS_MAX) << (NUM_BITS + TID_BITS + PID_BITS);
+            idx = NEXT_TID.getAndIncrement() & TID_MAX;
+            tid = TID_SEQ[(int) idx] << NUM_BITS;
+            if ((num = NUM_SEQ[(int) idx].getAndIncrement()) > NUM_MAX) {
+                continue;
+            }
+            return ms | PID | tid | num;
+        }
     }
 }
