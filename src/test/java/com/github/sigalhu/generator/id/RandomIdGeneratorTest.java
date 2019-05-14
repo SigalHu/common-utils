@@ -21,24 +21,24 @@ public class RandomIdGeneratorTest {
 
     @Test
     public void repeatTest() throws Exception {
-        for (int ii = 0; ii < 100; ii++) {
+        for (int ii = 0; ii < 10; ii++) {
             System.out.println("repeat count: " + ii);
-            this.nextRandomId();
+            this.nextRandomIdMillis();
         }
     }
 
     @Test
-    public void nextRandomId() throws Exception {
+    public void nextRandomIdMillis() throws Exception {
         long[] ids = new long[10000];
         AtomicInteger incr = new AtomicInteger(0);
         CountDownLatch latch = new CountDownLatch(1);
-        for (int ii = 0; ii < 10000; ii++) {
+        for (int ii = 0; ii < ids.length; ii++) {
             executor.execute(() -> {
                 try {
                     latch.await();
                     ids[incr.getAndIncrement()] = RandomIdGenerator.nextRandomId();
                     // 假设一个线程在1ms内只获取一次id
-                    Thread.sleep(1);
+//                    Thread.sleep(1);
                 } catch (InterruptedException e) {
                 }
             });
@@ -49,18 +49,15 @@ public class RandomIdGeneratorTest {
             Thread.sleep(1000);
         } while (executor.getActiveCount() > 0);
 
-//        executor.shutdown();
-//        executor.awaitTermination(1, TimeUnit.MINUTES);
-
         Set<Long> idSet = new HashSet<>(ids.length);
-        for (long id : ids) {
-            if (idSet.contains(id)) {
-                System.err.println(id);
+        for (int i = 0; i < ids.length; i++) {
+            if (idSet.contains(ids[i])) {
+                System.err.println(i + ": " + ids[i]);
                 continue;
             }
-            idSet.add(id);
+            idSet.add(ids[i]);
         }
 
-        Assert.assertEquals(10000, Arrays.stream(ids).distinct().count());
+        Assert.assertEquals(ids.length, Arrays.stream(ids).distinct().count());
     }
 }
