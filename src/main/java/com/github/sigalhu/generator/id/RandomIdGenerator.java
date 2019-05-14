@@ -1,7 +1,9 @@
 package com.github.sigalhu.generator.id;
 
+import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicLongArray;
 
 /**
  * @author huxujun
@@ -32,6 +34,7 @@ public class RandomIdGenerator extends BaseIdGenerator {
      */
     private static final AtomicLong NEXT_TID = new AtomicLong(0);
     private static final int[] TID_SEQ = new int[(int) TID_MAX + 1];
+    private static final AtomicLong[] NUM_SEQ = new AtomicLong[(int) TID_MAX + 1];
 
     static {
         for (int tid = 0; tid <= TID_MAX; tid++) {
@@ -47,6 +50,8 @@ public class RandomIdGenerator extends BaseIdGenerator {
             TID_SEQ[bound - 1] = TID_SEQ[idx];
             TID_SEQ[idx] = tmp;
         }
+
+        Arrays.fill(NUM_SEQ, new AtomicLong(0));
     }
 
     /**
@@ -57,10 +62,10 @@ public class RandomIdGenerator extends BaseIdGenerator {
      */
     public static long nextRandomId() {
         long ms = ((System.currentTimeMillis() - TIMESTAMP_START) & MILLIS_MAX) << (NUM_BITS + TID_BITS);
-        long num = NEXT_TID.getAndIncrement() & TID_MAX;
-        long t = TID_SEQ[(int) num] << NUM_BITS;
-        long r = ThreadLocalRandom.current().nextLong() & NUM_MAX;
-        return ms | r | t;
+        long idx = NEXT_TID.getAndIncrement() & TID_MAX;
+        long tid = TID_SEQ[(int) idx] << NUM_BITS;
+        long num = NUM_SEQ[(int) idx].getAndIncrement() & NUM_MAX;
+        return ms | tid | num;
     }
 
     @Override

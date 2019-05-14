@@ -21,7 +21,7 @@ public class RandomIdGeneratorTest {
 
     @Test
     public void repeatTest() throws Exception {
-        for (int ii = 0; ii < 10; ii++) {
+        for (int ii = 0; ii < 100; ii++) {
             System.out.println("repeat count: " + ii);
             this.nextRandomIdMillis();
         }
@@ -37,8 +37,6 @@ public class RandomIdGeneratorTest {
                 try {
                     latch.await();
                     ids[incr.getAndIncrement()] = RandomIdGenerator.nextRandomId();
-                    // 假设一个线程在1ms内只获取一次id
-//                    Thread.sleep(1);
                 } catch (InterruptedException e) {
                 }
             });
@@ -46,7 +44,7 @@ public class RandomIdGeneratorTest {
         latch.countDown();
 
         do {
-            Thread.sleep(1000);
+            Thread.sleep(100);
         } while (executor.getActiveCount() > 0);
 
         Set<Long> idSet = new HashSet<>(ids.length);
