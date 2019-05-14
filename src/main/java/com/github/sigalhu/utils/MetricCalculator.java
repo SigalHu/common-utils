@@ -17,7 +17,7 @@ public class MetricCalculator {
         }
         double p = part.doubleValue();
         double t = total.doubleValue();
-        return Optional.ofNullable(t == 0 ? null : p / t);
+        return Optional.ofNullable(t == 0 ? null : p * 100 / t);
     }
 
     public static Optional<Long> tps(Number lastCount, long lastMillis, Number currentCount, long currentMillis) {

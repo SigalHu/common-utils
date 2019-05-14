@@ -6,7 +6,7 @@
 
     <groupId>com.github.sigalhu</groupId>
     <artifactId>common-utils</artifactId>
-    <version>0.0.0</version>
+    <version>1.0.0</version>
     <name>common-utils</name>
     <description>General utility classes useful across Java projects</description>
     <url>https://github.com/SigalHu/common-utils</url>
@@ -137,6 +137,13 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <tags>
+                        <tag>
+                            <name>date</name>
+                        </tag>
+                    </tags>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
