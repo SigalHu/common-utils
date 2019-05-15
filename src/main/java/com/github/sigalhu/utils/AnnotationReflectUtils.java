@@ -12,6 +12,13 @@ import java.util.Map;
  */
 public class AnnotationReflectUtils {
 
+    /**
+     * 修改注解的属性
+     *
+     * @param annotation 注解实例
+     * @param attributeName 对应注解的属性
+     * @param attributeValue 要修改的属性值
+     */
     public static void updateAttribute(Annotation annotation, String attributeName, Object attributeValue) {
         try {
             InvocationHandler invocationHandler = Proxy.getInvocationHandler(annotation);
@@ -28,10 +35,24 @@ public class AnnotationReflectUtils {
         }
     }
 
+    /**
+     * 批量修改注解的属性
+     *
+     * @param annotation 注解实例
+     * @param attributes key为对应注解的属性，value为要修改的属性值
+     * @throws IllegalStateException 属性不存在时抛出该异常
+     */
     public static void updateAttributes(Annotation annotation, Map<String, Object> attributes) {
         updateAttributes(annotation, attributes, false);
     }
 
+    /**
+     * 批量修改注解的属性
+     *
+     * @param annotation 注解实例
+     * @param attributes key为对应注解的属性，value为要修改的属性值
+     * @param ignoreNotExists 当注解中不存在key指定的属性时，是否抛出异常
+     */
     public static void updateAttributes(Annotation annotation, Map<String, Object> attributes, boolean ignoreNotExists) {
         try {
             InvocationHandler invocationHandler = Proxy.getInvocationHandler(annotation);
