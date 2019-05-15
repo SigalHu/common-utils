@@ -1,10 +1,12 @@
 package com.github.sigalhu.generator.id;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -19,9 +21,10 @@ public class RandomIdGeneratorTest {
             100, 100, 0, TimeUnit.SECONDS,
             new ArrayBlockingQueue<>(20000), new ThreadPoolExecutor.CallerRunsPolicy());
 
+    @Ignore
     @Test
     public void repeatTest() throws Exception {
-        for (int ii = 0; ii < 100; ii++) {
+        for (int ii = 0; ii < 10000; ii++) {
             System.out.println("repeat count: " + ii);
             this.nextRandomId();
         }
@@ -29,33 +32,45 @@ public class RandomIdGeneratorTest {
 
     @Test
     public void nextRandomId() throws Exception {
-        long[] ids = new long[10000];
-        AtomicInteger incr = new AtomicInteger(0);
+        @SuppressWarnings("unchecked")
+        Future<Long>[] futures = new Future[10000];
         CountDownLatch latch = new CountDownLatch(1);
-        for (int ii = 0; ii < ids.length; ii++) {
-            executor.execute(() -> {
+        for (int ii = 0; ii < futures.length; ii++) {
+            futures[ii] = executor.submit(() -> {
                 try {
                     latch.await();
-                    ids[incr.getAndIncrement()] = RandomIdGenerator.nextRandomId();
                 } catch (InterruptedException e) {
                 }
+                return RandomIdGenerator.nextRandomId();
             });
         }
         latch.countDown();
 
-        do {
-            Thread.sleep(100);
-        } while (executor.getActiveCount() > 0);
-
-        Set<Long> idSet = new HashSet<>(ids.length);
-        for (int i = 0; i < ids.length; i++) {
-            if (idSet.contains(ids[i])) {
-                System.err.println(i + ": " + ids[i]);
-                continue;
-            }
-            idSet.add(ids[i]);
+        for (Future<Long> future : futures) {
+            future.get();
         }
 
-        Assert.assertEquals(ids.length, Arrays.stream(ids).distinct().count());
+        Set<Long> idSet = new HashSet<>(futures.length);
+        for (int i = 0; i < futures.length; i++) {
+            if (idSet.contains(futures[i].get())) {
+                for (int j = 0; j < futures.length; j++) {
+                    if (Objects.equals(futures[i].get(), futures[j].get())) {
+                        System.err.println(j + ": " + futures[j].get());
+                        break;
+                    }
+                }
+                System.err.println(i + ": " + futures[i].get());
+                continue;
+            }
+            idSet.add(futures[i].get());
+        }
+
+        Assert.assertEquals(futures.length, Arrays.stream(futures).mapToLong(future->{
+            try {
+                return future.get();
+            } catch (Exception e) {
+                throw new IllegalStateException(e);
+            }
+        }).distinct().count());
     }
 }
