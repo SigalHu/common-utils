@@ -54,6 +54,8 @@ public class RandomIdGenerator extends BaseIdGenerator {
         Arrays.fill(NUM_SEQ, new AtomicLong(0));
     }
 
+    private static volatile long current = System.currentTimeMillis();
+
     /**
      * 1. 保证同一进程同一ms最多256个线程生成的id不重复
      * 2. 多进程情况下有极低概率id重复
@@ -61,15 +63,35 @@ public class RandomIdGenerator extends BaseIdGenerator {
      * @return
      */
     public static long nextRandomId() {
-        long ms = ((System.currentTimeMillis() - TIMESTAMP_START) & MILLIS_MAX) << (NUM_BITS + TID_BITS);
-        long idx = NEXT_TID.getAndIncrement() & TID_MAX;
-        long tid = TID_SEQ[(int) idx] << NUM_BITS;
-        long num = NUM_SEQ[(int) idx].getAndIncrement() & NUM_MAX;
-        return ms | tid | num;
+        long ms, idx, tid, num, c;
+        for (;;) {
+            if ((ms = System.currentTimeMillis()) > (c = current)) {
+                synchronized (RandomIdGenerator.class) {
+                    if (c == current) {
+                        current = ms;
+                        resetNumSeq();
+                    }
+                    c = current;
+                }
+            }
+            ms = ((c - TIMESTAMP_START) & MILLIS_MAX) << (NUM_BITS + TID_BITS);
+            idx = NEXT_TID.getAndIncrement() & TID_MAX;
+            tid = TID_SEQ[(int) idx] << NUM_BITS;
+            if ((num = NUM_SEQ[(int) idx].getAndIncrement()) > NUM_MAX || c != current) {
+                continue;
+            }
+            return ms | tid | num;
+        }
     }
 
     @Override
     public long nextId() {
         return nextRandomId();
+    }
+
+    private static void resetNumSeq() {
+        for (AtomicLong num : NUM_SEQ) {
+            num.set(0);
+        }
     }
 }
