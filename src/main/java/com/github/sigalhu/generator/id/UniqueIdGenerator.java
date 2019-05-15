@@ -1,8 +1,5 @@
 package com.github.sigalhu.generator.id;
 
-import java.util.Arrays;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 
 /**
@@ -14,7 +11,7 @@ public class UniqueIdGenerator extends BaseIdGenerator {
     /**
      * 进程id递增
      */
-    private static final String NEXT_PID_KEY = "id_generator:weak_unique_id:next_pid";
+    private static final String NEXT_PID_KEY = "id_generator:unique_id:next_pid";
 
     /**
      * 毫秒占41位，预计可使用69年
@@ -29,51 +26,21 @@ public class UniqueIdGenerator extends BaseIdGenerator {
     private static final long PID_MAX = 0x3FL;
 
     /**
-     * 线程id占8位，cpu数不超过256时，线程id在同一ms唯一
+     * 自增数在低16位
      */
-    private static final int TID_BITS = 8;
-    private static final long TID_MAX = 0xFFL;
-
-    /**
-     * 自增数在低8位
-     */
-    private static final int NUM_BITS = 8;
-    private static final long NUM_MAX = 0xFFL;
-
-    /**
-     * 为每个线程分配一个id，最多支持256个线程不重复
-     */
-    private static final AtomicLong NEXT_TID = new AtomicLong(0);
-    private static final int[] TID_SEQ = new int[(int) TID_MAX + 1];
-    private static final AtomicLong[] NUM_SEQ = new AtomicLong[(int) TID_MAX + 1];
-
-    static {
-        for (int tid = 0; tid <= TID_MAX; tid++) {
-            TID_SEQ[tid] = tid;
-        }
-        int idx, tmp;
-        for (int bound = (int) TID_MAX + 1; bound > 1; bound--) {
-            idx = ThreadLocalRandom.current().nextInt(bound);
-            if (idx == bound - 1) {
-                continue;
-            }
-            tmp = TID_SEQ[bound - 1];
-            TID_SEQ[bound - 1] = TID_SEQ[idx];
-            TID_SEQ[idx] = tmp;
-        }
-
-        Arrays.fill(NUM_SEQ, new AtomicLong(0));
-    }
+    private static final int NUM_BITS = 16;
+    private static final long NUM_MAX = 0xFFFFL;
 
     private final long PID;
-    private static volatile long current = System.currentTimeMillis();
+    private long nextNum = 0L;
+    private long current = System.currentTimeMillis();
 
     public UniqueIdGenerator(Function<String, Long> incrOperate) {
-        PID = (incrOperate.apply(NEXT_PID_KEY) & PID_MAX) << (NUM_BITS + TID_BITS);
+        PID = (incrOperate.apply(NEXT_PID_KEY) & PID_MAX) << NUM_BITS;
     }
 
     public UniqueIdGenerator(Function<String, Long> incrOperate, String appName) {
-        PID = (incrOperate.apply(NEXT_PID_KEY + ":" + appName) & PID_MAX) << (NUM_BITS + TID_BITS);
+        PID = (incrOperate.apply(NEXT_PID_KEY + ":" + appName) & PID_MAX) << NUM_BITS;
     }
 
     /**
@@ -85,31 +52,18 @@ public class UniqueIdGenerator extends BaseIdGenerator {
      * @return
      */
     @Override
-    public long nextId() {
-        long ms, idx, tid, num, c;
+    public synchronized long nextId() {
+        long ms, num;
         for (;;) {
-            if ((ms = System.currentTimeMillis()) > (c = current)) {
-                synchronized (this) {
-                    if (c == current) {
-                        current = ms;
-                        resetNumSeq();
-                    }
-                    c = current;
-                }
+            if ((ms = System.currentTimeMillis()) > current) {
+                current = ms;
+                nextNum = 0;
             }
-            ms = ((c - TIMESTAMP_START) & MILLIS_MAX) << (NUM_BITS + TID_BITS + PID_BITS);
-            idx = NEXT_TID.getAndIncrement() & TID_MAX;
-            tid = TID_SEQ[(int) idx] << NUM_BITS;
-            if ((num = NUM_SEQ[(int) idx].getAndIncrement()) > NUM_MAX || c != current) {
+            ms = ((current - TIMESTAMP_START) & MILLIS_MAX) << (NUM_BITS + PID_BITS);
+            if ((num = nextNum++) > NUM_MAX) {
                 continue;
             }
-            return ms | PID | tid | num;
-        }
-    }
-
-    private static void resetNumSeq() {
-        for (AtomicLong num : NUM_SEQ) {
-            num.set(0);
+            return ms | PID | num;
         }
     }
 }
