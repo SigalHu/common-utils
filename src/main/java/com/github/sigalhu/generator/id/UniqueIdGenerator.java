@@ -92,17 +92,24 @@ public class UniqueIdGenerator extends BaseIdGenerator {
                 synchronized (this) {
                     if (c == current) {
                         current = ms;
-                        Arrays.fill(NUM_SEQ, new AtomicLong(0));
+                        resetNumSeq();
                     }
+                    c = current;
                 }
             }
-            ms = ((current - TIMESTAMP_START) & MILLIS_MAX) << (NUM_BITS + TID_BITS + PID_BITS);
+            ms = ((c - TIMESTAMP_START) & MILLIS_MAX) << (NUM_BITS + TID_BITS + PID_BITS);
             idx = NEXT_TID.getAndIncrement() & TID_MAX;
             tid = TID_SEQ[(int) idx] << NUM_BITS;
-            if ((num = NUM_SEQ[(int) idx].getAndIncrement()) > NUM_MAX) {
+            if ((num = NUM_SEQ[(int) idx].getAndIncrement()) > NUM_MAX || c != current) {
                 continue;
             }
             return ms | PID | tid | num;
+        }
+    }
+
+    private static void resetNumSeq() {
+        for (AtomicLong num : NUM_SEQ) {
+            num.set(0);
         }
     }
 }
