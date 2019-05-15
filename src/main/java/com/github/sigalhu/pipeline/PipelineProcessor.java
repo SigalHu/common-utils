@@ -10,6 +10,8 @@ import org.apache.commons.collections4.CollectionUtils;
 import java.util.List;
 
 /**
+ * PipelineProcessor 为流水线，可以依次处理传入的 Processors，当传入的 Processor 发生异常或返回成功/失败时，中止执行
+ *
  * @author huxujun
  * @date 2019-04-21
  */

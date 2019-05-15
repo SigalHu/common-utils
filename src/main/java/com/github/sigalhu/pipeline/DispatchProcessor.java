@@ -10,6 +10,8 @@ import org.apache.commons.collections4.CollectionUtils;
 import java.util.List;
 
 /**
+ * DispatchProcessor 为分发器，可以依次处理传入的 Processors，每个 Processor 互不影响，都会被执行
+ *
  * @author huxujun
  * @date 2019-04-21
  */

@@ -1,6 +1,8 @@
 package com.github.sigalhu.pipeline;
 
 /**
+ * Processor 为基础单元，可以执行处理逻辑，跳过处理或打印耗时
+ *
  * @author huxujun
  * @date 2019-04-21
  */

@@ -21,6 +21,14 @@ public class ThreadPoolMonitor {
         monitorThreadPool(EXECUTOR, "thread-pool-monitor-scheduled-executor", 10, TimeUnit.SECONDS);
     }
 
+    /**
+     * 打印传入线程池的状态日志
+     *
+     * @param executor
+     * @param threadPoolName
+     * @param delay
+     * @param unit
+     */
     public static void monitorThreadPool(ThreadPoolExecutor executor, String threadPoolName, long delay, TimeUnit unit) {
         EXECUTOR.scheduleWithFixedDelay(() -> {
             log.info("threadPoolName={}, poolSize={}, corePoolSize={}, maxPoolSize={}, activeCount={}, taskCount={}, queueSize={}",
