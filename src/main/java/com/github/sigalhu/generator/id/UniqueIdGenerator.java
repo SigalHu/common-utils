@@ -66,7 +66,7 @@ public class UniqueIdGenerator extends BaseIdGenerator {
     }
 
     private final long PID;
-    private volatile long current = System.currentTimeMillis();
+    private static volatile long current = System.currentTimeMillis();
 
     public UniqueIdGenerator(Function<String, Long> incrOperate) {
         PID = (incrOperate.apply(NEXT_PID_KEY) & PID_MAX) << (NUM_BITS + TID_BITS);
