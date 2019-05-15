@@ -20,7 +20,7 @@ public class UniqueIdGenerator extends BaseIdGenerator {
     private static final long MILLIS_MAX = 0x1FFFFFFFFFFL;
 
     /**
-     * 实例id占6位，分布式系统该实例数不超过64时，实例id唯一
+     * 实例id占6位
      */
     private static final int PID_BITS = 6;
     private static final long PID_MAX = 0x3FL;
@@ -33,6 +33,10 @@ public class UniqueIdGenerator extends BaseIdGenerator {
 
     private final long PID;
     private long nextNum = 0L;
+
+    /**
+     * id生成的参考时间戳
+     */
     private long current = System.currentTimeMillis();
 
     public UniqueIdGenerator(Function<String, Long> incrOperate) {
@@ -44,10 +48,7 @@ public class UniqueIdGenerator extends BaseIdGenerator {
     }
 
     /**
-     * 生成非递增id
-     *
-     * 由于线程的时间片在ms级别，除非位于同一实例id同一ms内有256个以上的线程在不同cpu同时执行nextId生成的id才会重复，
-     * 但这只会在cpu数量大于256时才可能出现，另外由于最先获取时间戳，这样的话跨时间片的执行与一般执行nextId生成的id也必定不同
+     * 保证实例数不超过64时，生成的id唯一
      *
      * @return
      */

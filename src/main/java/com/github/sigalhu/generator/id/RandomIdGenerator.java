@@ -18,13 +18,13 @@ public class RandomIdGenerator extends BaseIdGenerator {
     private static final long MILLIS_MAX = 0x1FFFFFFFFFFL;
 
     /**
-     * 线程id占8位，cpu数不超过256时，线程id在同一ms唯一
+     * 线程id占8位
      */
     private static final int TID_BITS = 8;
     private static final long TID_MAX = 0xFFL;
 
     /**
-     * 随机数占14位
+     * 自增数占14位
      */
     private static final int NUM_BITS = 14;
     private static final long NUM_MAX = 0x3FFFL;
@@ -34,9 +34,14 @@ public class RandomIdGenerator extends BaseIdGenerator {
      */
     private static final AtomicLong NEXT_TID = new AtomicLong(0);
     private static final int[] TID_SEQ = new int[(int) TID_MAX + 1];
+
+    /**
+     * 为每一个线程id分配一个对应的自增数
+     */
     private static final AtomicLong[] NUM_SEQ = new AtomicLong[(int) TID_MAX + 1];
 
     static {
+        // 打乱线程id的排列顺序，尽可能降低不同进程在同一ms获取到相同的线程id
         for (int tid = 0; tid <= TID_MAX; tid++) {
             TID_SEQ[tid] = tid;
         }
@@ -54,10 +59,13 @@ public class RandomIdGenerator extends BaseIdGenerator {
         Arrays.fill(NUM_SEQ, new AtomicLong(0));
     }
 
+    /**
+     * id生成的参考时间戳
+     */
     private static volatile long current = System.currentTimeMillis();
 
     /**
-     * 1. 保证同一进程同一ms最多256个线程生成的id不重复
+     * 1. 保证同一进程生成的id唯一
      * 2. 多进程情况下有极低概率id重复
      *
      * @return
