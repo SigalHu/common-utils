@@ -8,11 +8,17 @@
 <dependency>
   <groupId>com.github.sigalhu</groupId>
   <artifactId>common-utils</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
 </dependency>
 ```
 
 ### 版本升级
+
+**1.0.1**
+
+* 新增 IdGenerator 以生成 id
+    * RandomIdGenerator 为随机 id 生成器，同一进程内生成的 id 唯一
+    * UniqueIdGenerator 为唯一 id 生成器，实例数不超过64时，生成的 id 唯一
 
 **1.0.0 新增工具类、Pipeline**
 
