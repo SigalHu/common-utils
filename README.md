@@ -14,6 +14,12 @@
 
 ### 版本升级
 
+**1.0.2**
+
+* 新增 BeanUtils，功能包括：
+    * 获取 bean 的所有属性 getter Function，性能接近直接调用 bean getter
+    * 获取 bean 的所有属性 setter BiConsumer，性能接近直接调用 bean setter
+
 **1.0.1**
 
 * 新增 IdGenerator 以生成 id

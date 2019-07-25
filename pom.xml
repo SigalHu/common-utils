@@ -6,7 +6,7 @@
 
     <groupId>com.github.sigalhu</groupId>
     <artifactId>common-utils</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <name>common-utils</name>
     <description>General utility classes useful across Java projects</description>
     <url>https://github.com/SigalHu/common-utils</url>
