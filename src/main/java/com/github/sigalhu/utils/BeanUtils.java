@@ -18,6 +18,13 @@ import java.util.function.Function;
  */
 public class BeanUtils {
 
+    /**
+     * 获取 bean 所有字段的 getter
+     *
+     * @param clazz bean 的 class
+     * @param <T>
+     * @return
+     */
     @SuppressWarnings("unchecked")
     public static <T> Map<String, Function<T, Object>> getters(Class<T> clazz) {
         try {
@@ -42,6 +49,13 @@ public class BeanUtils {
         }
     }
 
+    /**
+     * 获取 bean 所有字段的 setter
+     *
+     * @param clazz bean 的 class
+     * @param <T>
+     * @return
+     */
     @SuppressWarnings("unchecked")
     public static <T> Map<String, BiConsumer<T, Object>> setters(Class<T> clazz) {
         try {
