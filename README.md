@@ -14,6 +14,12 @@
 
 ### 版本升级
 
+**future**
+
+* 升级 BeanUtils，功能包括：
+    * 获取 bean 指定字段路径值的集合
+    * 缓存所有获取的 getter/setter
+
 **1.0.2**
 
 * 新增 BeanUtils，功能包括：
