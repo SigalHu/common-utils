@@ -24,5 +24,8 @@ public class MathUtilsTest {
         assertTrue(MathUtils.equals(1L, 1D));
         assertFalse(MathUtils.equals(2, 1L));
         assertTrue(MathUtils.equals(1F, 1D));
+        assertFalse(MathUtils.equals(null, 1D));
+        assertFalse(MathUtils.equals(1L, null));
+        assertTrue(MathUtils.equals(null, null));
     }
 }
