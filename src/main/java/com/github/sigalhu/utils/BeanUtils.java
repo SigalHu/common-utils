@@ -88,6 +88,45 @@ public class BeanUtils {
         });
     }
 
+    /**
+     * 获取 bean 指定字段路径值的集合
+     *
+     * @param entity     实例
+     * @param fieldNames 字段路径
+     * @return
+     */
+    public static Set<Object> collectFieldValue(Object entity, String... fieldNames) {
+        return collectFieldValue(entity, Arrays.asList(fieldNames));
+    }
+
+    public static Set<Object> collectFieldValue(Object entity, List<String> fieldNames) {
+        Set<Object> result = new HashSet<>();
+        collectFieldValue(entity, fieldNames, result);
+        return result;
+    }
+
+    private static void collectFieldValue(Object entity, List<String> fieldNames, Set<Object> fieldValues) {
+        for (int i = 0; i < fieldNames.size(); i++) {
+            if (entity instanceof Collection) {
+                for (Object item : (Collection) entity) {
+                    collectFieldValue(item, fieldNames.subList(i, fieldNames.size()), fieldValues);
+                }
+                return;
+            } else if (entity instanceof Map) {
+                entity = ((Map) entity).get(fieldNames.get(i));
+            } else {
+                if (entity == null) {
+                    return;
+                }
+                Function<Object, Object> getter = getters(entity.getClass()).get(fieldNames.get(i));
+                if (getter == null) {
+                    return;
+                }
+                entity = getter.apply(entity);
+            }
+        }
+        if (entity != null) {
+            fieldValues.add(entity);
         }
     }
 }
