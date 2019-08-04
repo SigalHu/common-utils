@@ -7,8 +7,8 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
@@ -19,64 +19,75 @@ import java.util.function.Function;
 public class BeanUtils {
 
     /**
+     * 缓存 getter/setter
+     */
+    private static Map<Class, Map<String, Function<Object, Object>>> getterCache = new ConcurrentHashMap<>();
+    private static Map<Class, Map<String, BiConsumer<Object, Object>>> setterCache = new ConcurrentHashMap<>();
+
+    /**
      * 获取 bean 所有字段的 getter
      *
      * @param clazz bean 的 class
-     * @param <T>
      * @return
      */
     @SuppressWarnings("unchecked")
-    public static <T> Map<String, Function<T, Object>> getters(Class<T> clazz) {
-        try {
-            Map<String, Function<T, Object>> getterMap = new HashMap<>();
-            MethodHandles.Lookup lookup = MethodHandles.lookup();
-            MethodType getter = MethodType.methodType(Function.class);
-            MethodType getterType = MethodType.methodType(Object.class, Object.class);
-            for (PropertyDescriptor descriptor : Introspector.getBeanInfo(clazz).getPropertyDescriptors()) {
-                Method method = descriptor.getReadMethod();
-                if ("getClass".equals(method.getName())) {
-                    continue;
+    public static Map<String, Function<Object, Object>> getters(Class clazz) {
+        return getterCache.computeIfAbsent(clazz, c -> {
+            try {
+                Map<String, Function<Object, Object>> getterMap = new HashMap<>();
+                MethodHandles.Lookup lookup = MethodHandles.lookup();
+                MethodType getter = MethodType.methodType(Function.class);
+                MethodType getterType = MethodType.methodType(Object.class, Object.class);
+                for (PropertyDescriptor descriptor : Introspector.getBeanInfo(clazz).getPropertyDescriptors()) {
+                    Method method = descriptor.getReadMethod();
+                    if ("getClass".equals(method.getName())) {
+                        continue;
+                    }
+                    MethodHandle handle = lookup.findVirtual(clazz, method.getName(), MethodType.methodType(method.getReturnType()));
+                    getterMap.put(descriptor.getName(),
+                            (Function<Object, Object>) LambdaMetafactory.metafactory(
+                                    lookup, "apply", getter, getterType, handle, handle.type()
+                            ).getTarget().invokeExact());
                 }
-                MethodHandle handle = lookup.findVirtual(clazz, method.getName(), MethodType.methodType(method.getReturnType()));
-                getterMap.put(descriptor.getName(),
-                        (Function<T, Object>) LambdaMetafactory.metafactory(
-                                lookup, "apply", getter, getterType, handle, handle.type()
-                        ).getTarget().invokeExact());
+                return getterMap;
+            } catch (Throwable ex) {
+                throw new IllegalStateException(ex);
             }
-            return getterMap;
-        } catch (Throwable ex) {
-            throw new IllegalStateException(ex);
-        }
+        });
     }
 
     /**
      * 获取 bean 所有字段的 setter
      *
      * @param clazz bean 的 class
-     * @param <T>
      * @return
      */
     @SuppressWarnings("unchecked")
-    public static <T> Map<String, BiConsumer<T, Object>> setters(Class<T> clazz) {
-        try {
-            Map<String, BiConsumer<T, Object>> setterMap = new HashMap<>();
-            MethodHandles.Lookup lookup = MethodHandles.lookup();
-            MethodType setter = MethodType.methodType(BiConsumer.class);
-            MethodType setterType = MethodType.methodType(void.class, Object.class, Object.class);
-            for (PropertyDescriptor descriptor : Introspector.getBeanInfo(clazz).getPropertyDescriptors()) {
-                Method method = descriptor.getWriteMethod();
-                if (method == null) {
-                    continue;
+    public static Map<String, BiConsumer<Object, Object>> setters(Class clazz) {
+        return setterCache.computeIfAbsent(clazz, c -> {
+            try {
+                Map<String, BiConsumer<Object, Object>> setterMap = new HashMap<>();
+                MethodHandles.Lookup lookup = MethodHandles.lookup();
+                MethodType setter = MethodType.methodType(BiConsumer.class);
+                MethodType setterType = MethodType.methodType(void.class, Object.class, Object.class);
+                for (PropertyDescriptor descriptor : Introspector.getBeanInfo(clazz).getPropertyDescriptors()) {
+                    Method method = descriptor.getWriteMethod();
+                    if (method == null) {
+                        continue;
+                    }
+                    MethodHandle handle = lookup.findVirtual(clazz, method.getName(), MethodType.methodType(method.getReturnType(), method.getParameterTypes()));
+                    setterMap.put(descriptor.getName(),
+                            (BiConsumer<Object, Object>) LambdaMetafactory.metafactory(
+                                    lookup, "accept", setter, setterType, handle, handle.type()
+                            ).getTarget().invokeExact());
                 }
-                MethodHandle handle = lookup.findVirtual(clazz, method.getName(), MethodType.methodType(method.getReturnType(), method.getParameterTypes()));
-                setterMap.put(descriptor.getName(),
-                        (BiConsumer<T, Object>) LambdaMetafactory.metafactory(
-                                lookup, "accept", setter, setterType, handle, handle.type()
-                        ).getTarget().invokeExact());
+                return setterMap;
+            } catch (Throwable ex) {
+                throw new IllegalStateException(ex);
             }
-            return setterMap;
-        } catch (Throwable ex) {
-            throw new IllegalStateException(ex);
+        });
+    }
+
         }
     }
 }
