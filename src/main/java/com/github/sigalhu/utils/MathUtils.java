@@ -13,7 +13,7 @@ public class MathUtils {
     /**
      * 比较数据类型的数值大小
      *
-     * @param left 左值
+     * @param left  左值
      * @param right 右值
      * @return
      */
@@ -29,5 +29,19 @@ public class MathUtils {
             return Objects.compare(left.doubleValue(), right.doubleValue(), Comparator.comparing(Function.identity()));
         }
         return Objects.compare(left.longValue(), right.longValue(), Comparator.comparing(Function.identity()));
+    }
+
+    /**
+     * 判断是否相等，当为数据类型时，比较数值是否相等
+     *
+     * @param a 左值
+     * @param b 右值
+     * @return
+     */
+    public static boolean equals(Object a, Object b) {
+        if (a instanceof Number && b instanceof Number) {
+            return compare((Number) a, (Number) b) == 0;
+        }
+        return Objects.equals(a, b);
     }
 }
