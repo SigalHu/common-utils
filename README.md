@@ -16,9 +16,10 @@
 
 **future**
 
-* 新增 MathUtils，功能包括：
+* 新增 NumberUtils，功能包括：
     * 比较数据类型的数值大小
     * 判断是否相等，当为数据类型时，比较数值是否相等
+    * 将数据类型的数值转换为 64 bits
 * 升级 BeanUtils，功能包括：
     * 获取 bean 指定字段路径值的集合
     * 缓存所有获取的 getter/setter
