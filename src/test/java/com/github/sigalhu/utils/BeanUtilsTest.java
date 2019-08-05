@@ -55,7 +55,7 @@ public class BeanUtilsTest {
 
     @Test
     public void collectFieldValue() {
-        Set<Object> results = BeanUtils.collectFieldValue(generateStudent(), "transcript", "score");
+        Set<Object> results = BeanUtils.collectFieldValue(generateStudent(), "name");
         System.out.println(results);
     }
 

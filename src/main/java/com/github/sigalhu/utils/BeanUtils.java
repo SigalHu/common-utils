@@ -126,7 +126,11 @@ public class BeanUtils {
             }
         }
         if (entity != null) {
-            fieldValues.add(entity);
+            if (entity instanceof Collection) {
+                fieldValues.addAll((Collection<?>) entity);
+            } else {
+                fieldValues.add(entity);
+            }
         }
     }
 }
