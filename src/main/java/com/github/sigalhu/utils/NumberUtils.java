@@ -8,7 +8,7 @@ import java.util.function.Function;
  * @author huxujun
  * @date 2019-07-29
  */
-public class MathUtils {
+public class NumberUtils {
 
     /**
      * 比较数据类型的数值大小
@@ -43,5 +43,25 @@ public class MathUtils {
             return compare((Number) a, (Number) b) == 0;
         }
         return Objects.equals(a, b);
+    }
+
+    /**
+     * 将数据类型的数值转换为 64 bits
+     *
+     * @param object 数值
+     * @return
+     */
+    public static Object tryConvertTo64Bits(Object object) {
+        if (object == null) {
+            return null;
+        }
+        if (object instanceof Number) {
+            Number number = (Number) object;
+            if (number instanceof Float || number instanceof Double) {
+                return number.doubleValue();
+            }
+            return number.longValue();
+        }
+        return object;
     }
 }
