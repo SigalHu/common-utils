@@ -1,5 +1,8 @@
 package com.github.sigalhu.utils;
 
+import org.apache.commons.collections4.CollectionUtils;
+
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Objects;
 import java.util.function.Function;
@@ -61,6 +64,10 @@ public class NumberUtils {
                 return number.doubleValue();
             }
             return number.longValue();
+        } else if (object instanceof Collection) {
+            Collection collection = (Collection) object;
+            CollectionUtils.transform(collection, NumberUtils::tryConvertTo64Bits);
+            return collection;
         }
         return object;
     }

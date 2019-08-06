@@ -1,6 +1,9 @@
 package com.github.sigalhu.utils;
 
+import com.google.common.collect.Lists;
 import org.junit.Test;
+
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -33,5 +36,14 @@ public class NumberUtilsTest {
     public void convertTo64Bits() {
         assertEquals(1L, NumberUtils.tryConvertTo64Bits(1));
         assertEquals(1D, NumberUtils.tryConvertTo64Bits(1F));
+        @SuppressWarnings("unchecked")
+        List<Long> list = (List<Long>) NumberUtils.tryConvertTo64Bits(Lists.newArrayList(
+                Lists.newArrayList(1,2,3),
+                Lists.newArrayList(4F,5F,6F)
+        ));
+        assertArrayEquals(new Object[]{
+                Lists.newArrayList(1L,2L,3L),
+                Lists.newArrayList(4D,5D,6D)
+        }, list.toArray());
     }
 }
