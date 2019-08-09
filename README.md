@@ -8,14 +8,18 @@
 <dependency>
   <groupId>com.github.sigalhu</groupId>
   <artifactId>common-utils</artifactId>
-  <version>1.0.2</version>
+  <version>1.0.3</version>
 </dependency>
 ```
 
 ### 版本升级
 
-**future**
+**1.0.3**
 
+* 新增 BeanFilter，功能包括：
+    * 判断传入实例是否符合筛选条件
+    * 关系运算符包括等于、包含、小于、小于等于、大于、大于等于、属于
+    * 逻辑运算符包括与、或、非
 * 新增 NumberUtils，功能包括：
     * 比较数据类型的数值大小
     * 判断是否相等，当为数据类型时，比较数值是否相等
