@@ -14,7 +14,7 @@
 
 ### 版本升级
 
-**1.0.3**
+**1.0.3 过滤 Bean、可以比较不同类型数值的 NumberUtils**
 
 * 新增 BeanFilter，功能包括：
     * 判断传入实例是否符合筛选条件
@@ -28,13 +28,13 @@
     * 获取 bean 指定字段路径值的集合
     * 缓存所有获取的 getter/setter
 
-**1.0.2**
+**1.0.2 高效的 BeanUtils**
 
 * 新增 BeanUtils，功能包括：
     * 获取 bean 的所有属性 getter Function，性能接近直接调用 bean getter
     * 获取 bean 的所有属性 setter BiConsumer，性能接近直接调用 bean setter
 
-**1.0.1**
+**1.0.1 id 生成器**
 
 * 新增 IdGenerator 以生成 id
     * RandomIdGenerator 为随机 id 生成器，同一进程内生成的 id 唯一
