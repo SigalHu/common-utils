@@ -14,12 +14,12 @@ public enum FilterType {
      * 关系运算符
      */
     EQ("eq", "等于", Objects::equals),
-    CONTAIN("contain", "包含", (l, r) -> ((Collection) l).contains(r)),
-    LT("lt", "小于", (l, r) -> ((Comparable) l).compareTo(r) < 0),
-    LTE("lte", "小于等于", (l, r) -> ((Comparable) l).compareTo(r) <= 0),
-    GT("gt", "大于", (l, r) -> ((Comparable) l).compareTo(r) > 0),
-    GTE("gte", "大于等于", (l, r) -> ((Comparable) l).compareTo(r) >= 0),
-    IN("in", "属于", (l, r) -> ((Collection) r).contains(l)),
+    CONTAIN("contain", "包含", (l, r) -> l != null && ((Collection) l).contains(r)),
+    LT("lt", "小于", (l, r) -> l != null && r != null && ((Comparable) l).compareTo(r) < 0),
+    LTE("lte", "小于等于", (l, r) -> l != null && r != null && ((Comparable) l).compareTo(r) <= 0),
+    GT("gt", "大于", (l, r) -> l != null && r != null && ((Comparable) l).compareTo(r) > 0),
+    GTE("gte", "大于等于", (l, r) -> l != null && r != null && ((Comparable) l).compareTo(r) >= 0),
+    IN("in", "属于", (l, r) -> r != null && ((Collection) r).contains(l)),
 
     /**
      * 逻辑运算符

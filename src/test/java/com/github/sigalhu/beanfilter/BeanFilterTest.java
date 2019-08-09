@@ -26,7 +26,13 @@ public class BeanFilterTest {
                 Filters.gte("age", 18),
                 Filters.lt("height", 1.8D),
                 Filters.lte("weight", 65.5D),
-                Filters.in("age", 17, 18, 19)
+                Filters.in("age", 17, 18, 19),
+                Filters.not(
+                        Filters.or(
+                                Filters.eq("name", "student2"),
+                                Filters.gt("id", 1L)
+                        )
+                )
         ).test(generateStudent()));
     }
 

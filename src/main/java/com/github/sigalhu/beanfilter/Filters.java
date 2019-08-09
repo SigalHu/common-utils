@@ -41,19 +41,19 @@ public class Filters {
         return new LogicalFilter(FilterType.CONTAIN, fieldName, values);
     }
 
-    public static LogicalFilter lt(String fieldName, Object value) {
+    public static LogicalFilter lt(String fieldName, Comparable value) {
         return new LogicalFilter(FilterType.LT, fieldName, value);
     }
 
-    public static LogicalFilter lte(String fieldName, Object value) {
+    public static LogicalFilter lte(String fieldName, Comparable value) {
         return new LogicalFilter(FilterType.LTE, fieldName, value);
     }
 
-    public static LogicalFilter gt(String fieldName, Object value) {
+    public static LogicalFilter gt(String fieldName, Comparable value) {
         return new LogicalFilter(FilterType.GT, fieldName, value);
     }
 
-    public static LogicalFilter gte(String fieldName, Object value) {
+    public static LogicalFilter gte(String fieldName, Comparable value) {
         return new LogicalFilter(FilterType.GTE, fieldName, value);
     }
 
