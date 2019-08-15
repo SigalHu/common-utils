@@ -10,6 +10,26 @@ import java.util.function.*;
  */
 public class Try {
 
+    public static Runnable of(UncheckedRunnable runnable) {
+        return () -> {
+            try {
+                runnable.run();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        };
+    }
+
+    public static Runnable of(UncheckedRunnable runnable, Runnable defaultRunnable) {
+        return () -> {
+            try {
+                runnable.run();
+            } catch (Exception e) {
+                defaultRunnable.run();
+            }
+        };
+    }
+
     public static <T, U> BiConsumer<T, U> of(UncheckedBiConsumer<T, U> consumer) {
         return (t, u) -> {
             try {
