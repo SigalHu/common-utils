@@ -8,11 +8,20 @@
 <dependency>
   <groupId>com.github.sigalhu</groupId>
   <artifactId>common-utils</artifactId>
-  <version>1.0.3</version>
+  <version>1.0.5</version>
 </dependency>
 ```
 
 ### 版本升级
+
+**1.0.5 计时器**
+
+* 新增 CostTimer，功能包括：
+    * 提供阶段计时/闭包计时/Closeable计时
+    * 支持子计时器，对子阶段进行计时
+    * 支持参数控制子计时器是否计时，提高性能和灵活性
+* 升级 Try 工具类，功能包括：
+    * 捕获声明 throws 的 Runnable 抛出的异常，并抛出 RuntimeException 或执行兜底方法
 
 **1.0.3 过滤 Bean、可以比较不同类型数值的 NumberUtils**
 
