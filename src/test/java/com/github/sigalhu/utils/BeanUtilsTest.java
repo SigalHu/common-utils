@@ -1,5 +1,6 @@
 package com.github.sigalhu.utils;
 
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Sets;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -50,13 +51,20 @@ public class BeanUtilsTest {
                 new Subject("organism", 98),
                 new Subject("geography", 97)
         ));
+        student.setLastTrans(new Subject[]{
+                new Subject("mathematics", 97),
+                new Subject("physics", 98),
+                new Subject("organism", 99),
+                new Subject("geography", 100)
+        });
+        student.setScores(new int[]{90, 91, 92, 93});
         return student;
     }
 
     @Test
     public void collectFieldValue() {
-        Set<Object> results = BeanUtils.collectFieldValue(generateStudent(), "name");
-        System.out.println(results);
+        Set<Object> results = BeanUtils.collectFieldValue(generateStudent(), "scores");
+        System.out.println(JSON.toJSONString(results));
     }
 
     @Test
@@ -166,6 +174,8 @@ public class BeanUtilsTest {
     @EqualsAndHashCode(callSuper = true)
     public static class Student extends Person {
         private Set<Subject> transcript;
+        private Subject[] lastTrans;
+        private int[] scores;
     }
 
     @Data
