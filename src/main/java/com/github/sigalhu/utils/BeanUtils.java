@@ -128,6 +128,8 @@ public class BeanUtils {
         if (entity != null) {
             if (entity instanceof Collection) {
                 fieldValues.addAll((Collection<?>) entity);
+            } else if (entity.getClass().isArray()) {
+                fieldValues.addAll(ArrayUtils.asList(entity));
             } else {
                 fieldValues.add(entity);
             }
