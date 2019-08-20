@@ -10,7 +10,7 @@ import java.util.List;
 public class ArrayUtils {
 
     /**
-     * 将数组对象转化为 {@link Object} 数组
+     * 将包括基本数据类型在内的数组对象转化为 {@link Object} 数组
      *
      * @param array
      * @return
@@ -37,7 +37,7 @@ public class ArrayUtils {
     }
 
     /**
-     * 将数组对象转化为固定大小的列表
+     * 将包括基本数据类型在内的数组对象转化为固定大小的列表
      *
      * @param array
      * @return
