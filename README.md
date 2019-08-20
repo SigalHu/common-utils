@@ -8,11 +8,21 @@
 <dependency>
   <groupId>com.github.sigalhu</groupId>
   <artifactId>common-utils</artifactId>
-  <version>1.0.5</version>
+  <version>1.0.6</version>
 </dependency>
 ```
 
 ### 版本升级
+
+**1.0.6 数组工具和 JSON 的左值相等**
+
+* 新增 ArrayUtils，功能包括：
+    * 将包括基本数据类型在内的数组对象转化为 Object 数组
+    * 将包括基本数据类型在内的数组对象转化为固定大小的列表
+* 升级 BeanUtils，功能包括：
+    * 获取 bean 指定字段路径值的集合，包括数组字段
+* 升级 JsonUtils，功能包括：
+    * 判断 JSON 对象左值和右值是否相等，只比较左值及嵌套的 JSON 对象包含的属性
 
 **1.0.5 计时器**
 
