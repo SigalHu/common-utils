@@ -57,7 +57,7 @@ public class JsonUtils {
                     Map<String, Object> lm = (Map<String, Object>) left;
                     Map<String, Object> rm = (Map<String, Object>) right;
                     for (Map.Entry<String, Object> entry : lm.entrySet()) {
-                        if (!rm.containsKey(entry.getKey()) || !leftEquals(entry.getValue(), rm.get(entry.getKey()))) {
+                        if (!leftEquals(entry.getValue(), rm.get(entry.getKey()))) {
                             return false;
                         }
                     }
