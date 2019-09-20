@@ -65,4 +65,11 @@ public interface CostTimer extends Closeable {
      * @return
      */
     CostTimer childCostTimer(String name);
+
+    /**
+     * 耗时信息
+     *
+     * @param message
+     */
+    void message(String message);
 }

@@ -13,5 +13,6 @@ public class CostDetail {
 
     private String name;
     private Long cost;
+    private String message;
     private List<CostDetail> details;
 }

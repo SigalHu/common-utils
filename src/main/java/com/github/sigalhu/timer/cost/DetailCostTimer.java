@@ -52,4 +52,9 @@ public class DetailCostTimer implements CostTimer {
     public void close() throws IOException {
         end();
     }
+
+    @Override
+    public void message(String message) {
+        this.costDetail.setMessage(message);
+    }
 }

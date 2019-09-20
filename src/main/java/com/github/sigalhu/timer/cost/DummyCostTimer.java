@@ -31,6 +31,10 @@ public class DummyCostTimer extends DetailCostTimer {
         @Override
         public void close() throws IOException {
         }
+
+        @Override
+        public void message(String message) {
+        }
     };
 
     public DummyCostTimer(CostDetail costDetail) {
