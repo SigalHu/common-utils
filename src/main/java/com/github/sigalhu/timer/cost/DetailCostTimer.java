@@ -12,6 +12,7 @@ import java.io.IOException;
  */
 public class DetailCostTimer implements CostTimer {
 
+    private long cost = 0L;
     private long startTime;
     @Getter
     private CostDetail costDetail;
@@ -28,11 +29,13 @@ public class DetailCostTimer implements CostTimer {
 
     @Override
     public void end() {
-        this.costDetail.setCost(System.currentTimeMillis() - startTime);
+        long newCost = System.currentTimeMillis() - startTime;
+        cost += newCost;
+        costDetail.setCost(cost);
     }
 
     @Override
-    public Long getCost() {
+    public long getCost() {
         return costDetail.getCost();
     }
 

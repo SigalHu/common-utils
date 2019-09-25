@@ -12,7 +12,7 @@ import java.util.function.Supplier;
 public interface CostTimer extends Closeable {
 
     /**
-     * 开始计时
+     * 开始计时，多次计时会累计之前耗时
      */
     void start();
 
@@ -56,7 +56,7 @@ public interface CostTimer extends Closeable {
      *
      * @return
      */
-    Long getCost();
+    long getCost();
 
     /**
      * 获取子计时器

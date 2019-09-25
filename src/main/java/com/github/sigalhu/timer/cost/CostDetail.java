@@ -12,7 +12,7 @@ import java.util.List;
 public class CostDetail {
 
     private String name;
-    private Long cost;
+    private long cost = 0L;
     private String message;
     private List<CostDetail> details;
 }

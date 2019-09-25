@@ -17,8 +17,11 @@ public class CostHelperTest {
         timer1.cost(Try.of(() -> {
             Thread.sleep(500);
             CostTimer timer11 = timer1.childCostTimer("time11");
-            Thread.sleep(100);
-            timer11.end();
+            for (int i = 0; i < 10; i++) {
+                timer11.start();
+                Thread.sleep(10);
+                timer11.end();
+            }
         }));
         try (CostTimer timer12 = timer1.childCostTimer("timer12")) {
             Thread.sleep(300);

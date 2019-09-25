@@ -19,8 +19,8 @@ public class DummyCostTimer extends DetailCostTimer {
         }
 
         @Override
-        public Long getCost() {
-            return null;
+        public long getCost() {
+            return 0L;
         }
 
         @Override
