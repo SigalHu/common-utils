@@ -24,7 +24,9 @@ public class CostHelperTest {
             }
         }));
         try (CostTimer timer12 = timer1.childCostTimer("timer12")) {
+            timer1.start();
             Thread.sleep(300);
+            timer1.end();
         } catch (Exception e) {
 
         }

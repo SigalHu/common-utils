@@ -24,14 +24,14 @@ public class DetailCostTimer implements CostTimer {
 
     @Override
     public void start() {
-        startTime = System.currentTimeMillis();
+        startTime = System.nanoTime();
     }
 
     @Override
     public void end() {
-        long newCost = System.currentTimeMillis() - startTime;
+        long newCost = System.nanoTime() - startTime;
         cost += newCost;
-        costDetail.setCost(cost);
+        costDetail.setCost(cost / 1000000);
     }
 
     @Override
