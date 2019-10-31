@@ -1,4 +1,4 @@
-package com.github.sigalhu.utils;
+package com.github.sigalhu.metric;
 
 import org.apache.commons.lang3.ArrayUtils;
 
