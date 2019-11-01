@@ -14,7 +14,7 @@ public class RecentAverageCalculatorTest {
     private RecentAverageCalculator calculator = new RecentAverageCalculator(1);
 
     @Test
-    public void reset() {
+    public void test() {
         Assert.assertEquals(0, calculator.average(), 1e-10);
         Assert.assertEquals(1, calculator.calculate(1), 1e-10);
         Assert.assertEquals(1, calculator.calculate(2), 1e-10);
