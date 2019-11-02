@@ -6,7 +6,7 @@ import org.apache.commons.lang3.math.NumberUtils;
  * @author huxujun
  * @date 2019/11/2
  */
-public class DoubleParser extends BaseParser<Double> {
+public class DoubleParser extends BaseSettingParser<Double> {
 
     public DoubleParser(String prefix, String setting) {
         super(prefix, setting);

@@ -9,14 +9,14 @@ import java.util.Objects;
  * @author huxujun
  * @date 2019/11/2
  */
-public abstract class BaseParser<T> {
+public abstract class BaseSettingParser<T> implements SettingParser<T> {
 
     /**
-     * 配置项
+     * 指定配置
      */
     private String setting;
 
-    public BaseParser(String prefix, String setting) {
+    public BaseSettingParser(String prefix, String setting) {
         if (Objects.isNull(prefix)) {
             prefix = "";
         }
@@ -27,10 +27,12 @@ public abstract class BaseParser<T> {
         return null;
     }
 
+    @Override
     public T parse(Map<String, String> settings) {
         return parse(settings, defaultValue());
     }
 
+    @Override
     public T parse(Map<String, String> settings, T defaultValue) {
         if (MapUtils.isEmpty(settings)) {
             return defaultValue;

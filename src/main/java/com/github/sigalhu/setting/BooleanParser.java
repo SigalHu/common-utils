@@ -8,7 +8,7 @@ import java.util.Objects;
  * @author huxujun
  * @date 2019/11/2
  */
-public class BooleanParser extends BaseParser<Boolean> {
+public class BooleanParser extends BaseSettingParser<Boolean> {
 
     public BooleanParser(String prefix, String setting) {
         super(prefix, setting);

@@ -4,7 +4,7 @@ package com.github.sigalhu.setting;
  * @author huxujun
  * @date 2019/11/2
  */
-public class DummyParser extends BaseParser {
+public class DummyParser extends BaseSettingParser {
 
     public DummyParser(String prefix, String setting) {
         super(prefix, setting);

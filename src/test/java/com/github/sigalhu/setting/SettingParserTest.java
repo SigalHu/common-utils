@@ -10,7 +10,7 @@ import java.util.Map;
  * @author huxujun
  * @date 2019/11/2
  */
-public class BaseParserTest {
+public class SettingParserTest {
 
     @Test
     public void parse() {
