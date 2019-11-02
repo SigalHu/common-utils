@@ -23,9 +23,12 @@
 * 新增 JvmUtils，功能包括：
     * 支持获取 GC 总次数
     * 支持主动触发 GC
-* 新增最近均值计算器，功能包括：
+* 新增 RecentAverageCalculator，功能包括：
     * 计算并获取最近窗口的均值
     * 比较当前值与最近均值
+* 新增 SettingParser，功能包括：
+    * 解析配置为 Boolean/Double/Long
+    * 支持自定义解析规则
 
 **1.0.6 数组工具和 JSON 的左值相等**
 
