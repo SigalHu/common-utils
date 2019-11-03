@@ -6,8 +6,12 @@ package com.github.sigalhu.setting;
  */
 public class DummyParser extends BaseSettingParser {
 
+    public DummyParser(String setting) {
+        this(null, setting);
+    }
+
     public DummyParser(String prefix, String setting) {
-        super(prefix, setting, null);
+        this(prefix, setting, null);
     }
 
     public DummyParser(String prefix, String setting, Object defaultValue) {

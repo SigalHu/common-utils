@@ -8,8 +8,12 @@ import org.apache.commons.lang3.math.NumberUtils;
  */
 public class LongParser extends BaseSettingParser<Long> {
 
+    public LongParser(String setting) {
+        this(null, setting);
+    }
+
     public LongParser(String prefix, String setting) {
-        super(prefix, setting, 0L);
+        this(prefix, setting, 0L);
     }
 
     public LongParser(String prefix, String setting, Long defaultValue) {

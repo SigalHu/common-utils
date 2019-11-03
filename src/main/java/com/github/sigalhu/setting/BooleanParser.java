@@ -10,8 +10,12 @@ import java.util.Objects;
  */
 public class BooleanParser extends BaseSettingParser<Boolean> {
 
+    public BooleanParser(String setting) {
+        this(null, setting);
+    }
+
     public BooleanParser(String prefix, String setting) {
-        super(prefix, setting, false);
+        this(prefix, setting, false);
     }
 
     public BooleanParser(String prefix, String setting, Boolean defaultValue) {

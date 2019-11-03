@@ -8,8 +8,12 @@ import org.apache.commons.lang3.math.NumberUtils;
  */
 public class DoubleParser extends BaseSettingParser<Double> {
 
+    public DoubleParser(String setting) {
+        this(null, setting);
+    }
+
     public DoubleParser(String prefix, String setting) {
-        super(prefix, setting, 0D);
+        this(prefix, setting, 0D);
     }
 
     public DoubleParser(String prefix, String setting, Double defaultValue) {

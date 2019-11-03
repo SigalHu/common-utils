@@ -6,8 +6,12 @@ package com.github.sigalhu.setting;
  */
 public class VoidParser extends BaseSettingParser<Void> {
 
+    public VoidParser(String setting) {
+        super(setting);
+    }
+
     public VoidParser(String prefix, String setting) {
-        super(prefix, setting, null);
+        super(prefix, setting);
     }
 
     @Override
