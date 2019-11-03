@@ -41,14 +41,14 @@ public class DetailCostTimer implements CostTimer {
 
     @Override
     public CostTimer childCostTimer(String name) {
-        CostDetail costDetail = new CostDetail();
-        costDetail.setName(name);
+        CostDetail detail = new CostDetail();
+        detail.setName(name);
         if (CollectionUtils.isEmpty(this.costDetail.getDetails())) {
-            this.costDetail.setDetails(Lists.newArrayList(costDetail));
+            this.costDetail.setDetails(Lists.newArrayList(detail));
         } else {
-            this.costDetail.getDetails().add(costDetail);
+            this.costDetail.getDetails().add(detail);
         }
-        return new DetailCostTimer(costDetail);
+        return new DetailCostTimer(detail);
     }
 
     @Override
