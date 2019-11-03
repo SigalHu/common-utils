@@ -8,6 +8,8 @@ import java.util.Map;
  */
 public interface SettingParser<T> {
 
+    String DELIMITER = ".";
+    
     /**
      * 解析指定配置
      *

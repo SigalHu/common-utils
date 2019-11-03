@@ -14,7 +14,7 @@ public abstract class BaseSettingParser<T> implements SettingParser<T> {
     /**
      * 指定配置
      */
-    private String setting;
+    protected String setting;
 
     public BaseSettingParser(String prefix, String setting) {
         if (Objects.isNull(prefix)) {
@@ -51,7 +51,7 @@ public abstract class BaseSettingParser<T> implements SettingParser<T> {
     /**
      * 将对应配置的字符串值解析为具体对象
      *
-     * @param str 对应配置的字符串值
+     * @param str          对应配置的字符串值
      * @param defaultValue 对应配置的默认值
      * @return 配置值对象
      */
