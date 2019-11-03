@@ -9,12 +9,11 @@ import org.apache.commons.lang3.math.NumberUtils;
 public class DoubleParser extends BaseSettingParser<Double> {
 
     public DoubleParser(String prefix, String setting) {
-        super(prefix, setting);
+        super(prefix, setting, 0D);
     }
 
-    @Override
-    protected Double defaultValue() {
-        return 0D;
+    public DoubleParser(String prefix, String setting, Double defaultValue) {
+        super(prefix, setting, defaultValue);
     }
 
     @Override

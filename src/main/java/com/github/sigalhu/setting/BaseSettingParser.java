@@ -1,6 +1,7 @@
 package com.github.sigalhu.setting;
 
 import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 import java.util.Objects;
@@ -16,20 +17,29 @@ public abstract class BaseSettingParser<T> implements SettingParser<T> {
      */
     protected String setting;
 
+    /**
+     * 默认值
+     */
+    protected T defaultValue;
+
     public BaseSettingParser(String prefix, String setting) {
+        this(prefix, setting, null);
+    }
+
+    public BaseSettingParser(String prefix, String setting, T defaultValue) {
         if (Objects.isNull(prefix)) {
             prefix = "";
         }
+        if (!StringUtils.isEmpty(prefix) && !prefix.endsWith(DELIMITER)) {
+            prefix += ".";
+        }
         this.setting = prefix + setting;
-    }
-
-    protected T defaultValue() {
-        return null;
+        this.defaultValue = defaultValue;
     }
 
     @Override
     public T parse(Map<String, String> settings) {
-        return parse(settings, defaultValue());
+        return parse(settings, defaultValue);
     }
 
     @Override

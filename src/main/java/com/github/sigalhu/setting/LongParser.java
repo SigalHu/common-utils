@@ -9,12 +9,11 @@ import org.apache.commons.lang3.math.NumberUtils;
 public class LongParser extends BaseSettingParser<Long> {
 
     public LongParser(String prefix, String setting) {
-        super(prefix, setting);
+        super(prefix, setting, 0L);
     }
 
-    @Override
-    protected Long defaultValue() {
-        return 0L;
+    public LongParser(String prefix, String setting, Long defaultValue) {
+        super(prefix, setting, defaultValue);
     }
 
     @Override

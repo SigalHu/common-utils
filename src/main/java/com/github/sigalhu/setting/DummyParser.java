@@ -7,7 +7,11 @@ package com.github.sigalhu.setting;
 public class DummyParser extends BaseSettingParser {
 
     public DummyParser(String prefix, String setting) {
-        super(prefix, setting);
+        super(prefix, setting, null);
+    }
+
+    public DummyParser(String prefix, String setting, Object defaultValue) {
+        super(prefix, setting, defaultValue);
     }
 
     @Override

@@ -11,12 +11,11 @@ import java.util.Objects;
 public class BooleanParser extends BaseSettingParser<Boolean> {
 
     public BooleanParser(String prefix, String setting) {
-        super(prefix, setting);
+        super(prefix, setting, false);
     }
 
-    @Override
-    protected Boolean defaultValue() {
-        return false;
+    public BooleanParser(String prefix, String setting, Boolean defaultValue) {
+        super(prefix, setting, defaultValue);
     }
 
     @Override
