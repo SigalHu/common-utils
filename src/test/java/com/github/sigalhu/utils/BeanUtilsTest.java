@@ -2,18 +2,19 @@ package com.github.sigalhu.utils;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Sets;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * @author huxujun
@@ -159,8 +160,111 @@ public class BeanUtilsTest {
         return cost;
     }
 
+    @Test
+    public void function() throws Exception {
+        resetPerson();
+        Method getAge = Person.class.getMethod("getAge");
+        Method setAge = Person.class.getMethod("setAge", Integer.class);
+        Function<Person, Integer> phoneGetter = BeanUtils.function(getAge, Function.class);
+        BiConsumer<Person, Integer> phoneSetter = BeanUtils.function(setAge, BiConsumer.class);
+
+        long start, end;
+        start = System.currentTimeMillis();
+        for (int i = 0; i < 100000; ) {
+            setAge.invoke(person, i + 1);
+            i = (int) getAge.invoke(person);
+        }
+        end = System.currentTimeMillis();
+        System.err.println(end - start);
+
+        start = System.currentTimeMillis();
+        for (int i = 0; i < 100000; ) {
+            phoneSetter.accept(person, i + 1);
+            i = phoneGetter.apply(person);
+        }
+        end = System.currentTimeMillis();
+        System.err.println(end - start);
+
+        start = System.currentTimeMillis();
+        for (int i = 0; i < 100000; ) {
+            person.setAge(i + 1);
+            i = person.getAge();
+        }
+        end = System.currentTimeMillis();
+        System.err.println(end - start);
+    }
+
+    @Test
+    public void testStatic() throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        Method getTest = Person.class.getMethod("getTest");
+        Supplier<String> testGetter = BeanUtils.function(getTest, Supplier.class);
+
+        long start, end;
+        start = System.currentTimeMillis();
+        for (int i = 0; i < 100000; i++) {
+            getTest.invoke(person);
+        }
+        end = System.currentTimeMillis();
+        System.err.println(end - start);
+
+        start = System.currentTimeMillis();
+        for (int i = 0; i < 100000; i++) {
+            testGetter.get();
+        }
+        end = System.currentTimeMillis();
+        System.err.println(end - start);
+
+        start = System.currentTimeMillis();
+        for (int i = 0; i < 100000; i++) {
+            Person.getTest();
+        }
+        end = System.currentTimeMillis();
+        System.err.println(end - start);
+    }
+
+    @Test
+    public void testConstructor() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        Constructor c = Person.class.getConstructor(Integer.class);
+        Function<Integer, Person> s = BeanUtils.function(c, Function.class);
+
+        long start, end;
+        System.gc();
+        start = System.currentTimeMillis();
+        for (int i = 0; i < 100000; ) {
+            i = ((Person) c.newInstance(i + 1)).getAge();
+        }
+        end = System.currentTimeMillis();
+        System.err.println(end - start);
+
+        System.gc();
+        start = System.currentTimeMillis();
+        for (int i = 0; i < 100000; ) {
+            i = s.apply(i + 1).getAge();
+        }
+        end = System.currentTimeMillis();
+        System.err.println(end - start);
+
+        System.gc();
+        start = System.currentTimeMillis();
+        for (int i = 0; i < 100000; ) {
+            i = new Person(i + 1).getAge();
+        }
+        end = System.currentTimeMillis();
+        System.err.println(end - start);
+    }
+
     @Data
+    @NoArgsConstructor
     public static class Person {
+
+        public Person(Integer age) {
+            this.age = age;
+        }
+
+        public static String getTest() {
+            return "test";
+        }
+
         private Long id;
         private String name;
         private Integer age;

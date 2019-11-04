@@ -6,7 +6,10 @@ import java.lang.invoke.LambdaMetafactory;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
@@ -24,30 +27,75 @@ public class BeanUtils {
     private static Map<Class, Map<String, Function<Object, Object>>> getterCache = new ConcurrentHashMap<>();
     private static Map<Class, Map<String, BiConsumer<Object, Object>>> setterCache = new ConcurrentHashMap<>();
 
+    private static final MethodHandles.Lookup lookup = MethodHandles.lookup();
+
+    /**
+     * 缓存 {@link FunctionalInterface} 的 {@link Method} 或 {@link Constructor}
+     */
+    private static Map<Class, Method> invokedMethodCache = new ConcurrentHashMap<>();
+
+    /**
+     * 通过 {@link Method} 生成 {@link FunctionalInterface}
+     *
+     * @param method
+     * @param invokedType
+     * @param <T>
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T function(Executable method, Class invokedType) {
+        Assert.isTrue(invokedType.isAnnotationPresent(FunctionalInterface.class),
+                "The invokedType must be a functional interface!");
+        Method invokedMethod = invokedMethodCache.computeIfAbsent(invokedType, type -> {
+            for (Method m : invokedType.getMethods()) {
+                if (Modifier.isAbstract(m.getModifiers())) {
+                    return m;
+                }
+            }
+            throw new IllegalStateException("The invokedType must have an abstract method!");
+        });
+        try {
+            MethodHandle handle;
+            if (method instanceof Constructor) {
+                Constructor c = (Constructor) method;
+                handle = lookup.findConstructor(c.getDeclaringClass(),
+                        MethodType.methodType(void.class, c.getParameterTypes()));
+            } else {
+                Method m = (Method) method;
+                if (Modifier.isStatic(m.getModifiers())) {
+                    handle = lookup.findStatic(m.getDeclaringClass(), m.getName(),
+                            MethodType.methodType(m.getReturnType(), m.getParameterTypes()));
+                } else {
+                    handle = lookup.findVirtual(m.getDeclaringClass(), m.getName(),
+                            MethodType.methodType(m.getReturnType(), m.getParameterTypes()));
+                }
+            }
+            return (T) LambdaMetafactory.metafactory(
+                    lookup, invokedMethod.getName(), MethodType.methodType(invokedType),
+                    MethodType.methodType(invokedMethod.getReturnType(), invokedMethod.getParameterTypes()),
+                    handle, handle.type()
+            ).getTarget().invoke();
+        } catch (Throwable ex) {
+            throw new IllegalStateException(ex);
+        }
+    }
+
     /**
      * 获取 bean 所有字段的 getter
      *
      * @param clazz bean 的 class
      * @return
      */
-    @SuppressWarnings("unchecked")
     public static Map<String, Function<Object, Object>> getters(Class clazz) {
         return getterCache.computeIfAbsent(clazz, c -> {
             try {
                 Map<String, Function<Object, Object>> getterMap = new HashMap<>();
-                MethodHandles.Lookup lookup = MethodHandles.lookup();
-                MethodType getter = MethodType.methodType(Function.class);
-                MethodType getterType = MethodType.methodType(Object.class, Object.class);
                 for (PropertyDescriptor descriptor : Introspector.getBeanInfo(clazz).getPropertyDescriptors()) {
                     Method method = descriptor.getReadMethod();
                     if ("getClass".equals(method.getName())) {
                         continue;
                     }
-                    MethodHandle handle = lookup.findVirtual(clazz, method.getName(), MethodType.methodType(method.getReturnType()));
-                    getterMap.put(descriptor.getName(),
-                            (Function<Object, Object>) LambdaMetafactory.metafactory(
-                                    lookup, "apply", getter, getterType, handle, handle.type()
-                            ).getTarget().invokeExact());
+                    getterMap.put(descriptor.getName(), function(method, Function.class));
                 }
                 return getterMap;
             } catch (Throwable ex) {
@@ -62,24 +110,16 @@ public class BeanUtils {
      * @param clazz bean 的 class
      * @return
      */
-    @SuppressWarnings("unchecked")
     public static Map<String, BiConsumer<Object, Object>> setters(Class clazz) {
         return setterCache.computeIfAbsent(clazz, c -> {
             try {
                 Map<String, BiConsumer<Object, Object>> setterMap = new HashMap<>();
-                MethodHandles.Lookup lookup = MethodHandles.lookup();
-                MethodType setter = MethodType.methodType(BiConsumer.class);
-                MethodType setterType = MethodType.methodType(void.class, Object.class, Object.class);
                 for (PropertyDescriptor descriptor : Introspector.getBeanInfo(clazz).getPropertyDescriptors()) {
                     Method method = descriptor.getWriteMethod();
                     if (method == null) {
                         continue;
                     }
-                    MethodHandle handle = lookup.findVirtual(clazz, method.getName(), MethodType.methodType(method.getReturnType(), method.getParameterTypes()));
-                    setterMap.put(descriptor.getName(),
-                            (BiConsumer<Object, Object>) LambdaMetafactory.metafactory(
-                                    lookup, "accept", setter, setterType, handle, handle.type()
-                            ).getTarget().invokeExact());
+                    setterMap.put(descriptor.getName(), function(method, BiConsumer.class));
                 }
                 return setterMap;
             } catch (Throwable ex) {
