@@ -10,6 +10,10 @@ public class DummyParser extends BaseSettingParser {
         this(null, setting);
     }
 
+    public DummyParser(String setting, Object defaultValue) {
+        this(null, setting, defaultValue);
+    }
+
     public DummyParser(String prefix, String setting) {
         this(prefix, setting, null);
     }

@@ -14,6 +14,10 @@ public class BooleanParser extends BaseSettingParser<Boolean> {
         this(null, setting);
     }
 
+    public BooleanParser(String setting, Boolean defaultValue) {
+        this(null, setting, defaultValue);
+    }
+
     public BooleanParser(String prefix, String setting) {
         this(prefix, setting, false);
     }

@@ -26,6 +26,10 @@ public abstract class BaseSettingParser<T> implements SettingParser<T> {
         this(null, setting);
     }
 
+    public BaseSettingParser(String setting, T defaultValue) {
+        this(null, setting, defaultValue);
+    }
+
     public BaseSettingParser(String prefix, String setting) {
         this(prefix, setting, null);
     }

@@ -12,6 +12,10 @@ public class DoubleParser extends BaseSettingParser<Double> {
         this(null, setting);
     }
 
+    public DoubleParser(String setting, Double defaultValue) {
+        this(null, setting, defaultValue);
+    }
+
     public DoubleParser(String prefix, String setting) {
         this(prefix, setting, 0D);
     }
