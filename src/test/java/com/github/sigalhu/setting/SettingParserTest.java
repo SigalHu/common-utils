@@ -43,12 +43,7 @@ public class SettingParserTest {
     public static class NumberParser extends LongParser {
 
         public NumberParser(String prefix) {
-            super(prefix, "number");
-        }
-
-        @Override
-        protected Long defaultValue() {
-            return 1L;
+            super(prefix, "number", 1L);
         }
     }
 }

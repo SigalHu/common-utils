@@ -15,7 +15,7 @@ public class LongParser extends BaseSettingParser<Long> {
     public LongParser(String setting, Long defaultValue) {
         this(null, setting, defaultValue);
     }
-    
+
     public LongParser(String prefix, String setting) {
         this(prefix, setting, 0L);
     }
