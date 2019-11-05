@@ -17,33 +17,13 @@ public class SettingParserTest {
         Map<String, String> settings = new HashMap<>();
         settings.put("a.b", "true");
 
-        BooleanParser booleanParser = new BooleanParser("", "a");
+        BooleanParser booleanParser = new BooleanParser("a");
         Assert.assertFalse(booleanParser.parse(settings, false));
 
-        Assert.assertEquals(Long.valueOf(1), Settings.item.number.parse(settings));
-        Assert.assertEquals(Long.valueOf(20), Settings.item.number.parse(settings, 20L));
+        LongParser longParser = new LongParser("item.number", 1L);
+        Assert.assertEquals(Long.valueOf(1), longParser.parse(settings));
+        Assert.assertEquals(Long.valueOf(20), longParser.parse(settings, 20L));
         settings.put("item.number", "10");
-        Assert.assertEquals(Long.valueOf(10), Settings.item.number.parse(settings, 20L));
-    }
-
-    public static class Settings {
-
-        public static final ItemParser item = new ItemParser();
-    }
-
-    public static class ItemParser extends VoidParser {
-
-        public final NumberParser number = new NumberParser("item.");
-
-        public ItemParser() {
-            super("", "item");
-        }
-    }
-
-    public static class NumberParser extends LongParser {
-
-        public NumberParser(String prefix) {
-            super(prefix, "number", 1L);
-        }
+        Assert.assertEquals(Long.valueOf(10), longParser.parse(settings, 20L));
     }
 }
