@@ -27,8 +27,9 @@
     * 计算并获取最近窗口的均值
     * 比较当前值与最近均值
 * 新增 SettingParser，功能包括：
-    * 解析配置为 Boolean/Double/Long
+    * 解析配置为 Boolean/Double/Long 等基础类型
     * 支持自定义解析规则
+    * 支持通过注解的方式批量解析配置
 
 **1.0.6 数组工具和 JSON 的左值相等**
 
