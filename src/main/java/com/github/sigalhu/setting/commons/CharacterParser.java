@@ -1,14 +1,17 @@
 package com.github.sigalhu.setting.commons;
 
+
 import com.github.sigalhu.setting.reporters.AdaptedTypeReporter;
+import com.github.sigalhu.setting.reporters.SupplerReporter;
 
 import java.util.Objects;
+import java.util.function.Function;
 
 /**
  * @author huxujun
  * @date 2019/11/2
  */
-public class CharacterParser extends BaseSettingParser<Character> implements AdaptedTypeReporter {
+public class CharacterParser extends BaseSettingParser<Character> implements AdaptedTypeReporter, SupplerReporter {
 
     public CharacterParser(String setting) {
         this(null, setting);
@@ -34,5 +37,10 @@ public class CharacterParser extends BaseSettingParser<Character> implements Ada
     @Override
     public Class[] adaptedTypes() {
         return new Class[]{Character.class, char.class};
+    }
+
+    @Override
+    public Function<String, ? extends SettingParser> parserSuppler() {
+        return CharacterParser::new;
     }
 }

@@ -1,13 +1,16 @@
 package com.github.sigalhu.setting.commons;
 
 import com.github.sigalhu.setting.reporters.AdaptedTypeReporter;
+import com.github.sigalhu.setting.reporters.SupplerReporter;
 import org.apache.commons.lang3.math.NumberUtils;
+
+import java.util.function.Function;
 
 /**
  * @author huxujun
  * @date 2019/11/2
  */
-public class DoubleParser extends BaseSettingParser<Double> implements AdaptedTypeReporter {
+public class DoubleParser extends BaseSettingParser<Double> implements AdaptedTypeReporter, SupplerReporter {
 
     public DoubleParser(String setting) {
         this(null, setting);
@@ -33,5 +36,10 @@ public class DoubleParser extends BaseSettingParser<Double> implements AdaptedTy
     @Override
     public Class[] adaptedTypes() {
         return new Class[]{Double.class, double.class};
+    }
+
+    @Override
+    public Function<String, ? extends SettingParser> parserSuppler() {
+        return DoubleParser::new;
     }
 }

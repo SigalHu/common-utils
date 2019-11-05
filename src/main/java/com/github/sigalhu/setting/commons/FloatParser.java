@@ -1,13 +1,16 @@
 package com.github.sigalhu.setting.commons;
 
 import com.github.sigalhu.setting.reporters.AdaptedTypeReporter;
+import com.github.sigalhu.setting.reporters.SupplerReporter;
 import org.apache.commons.lang3.math.NumberUtils;
+
+import java.util.function.Function;
 
 /**
  * @author huxujun
  * @date 2019/11/2
  */
-public class FloatParser extends BaseSettingParser<Float> implements AdaptedTypeReporter {
+public class FloatParser extends BaseSettingParser<Float> implements AdaptedTypeReporter, SupplerReporter {
 
     public FloatParser(String setting) {
         this(null, setting);
@@ -33,5 +36,10 @@ public class FloatParser extends BaseSettingParser<Float> implements AdaptedType
     @Override
     public Class[] adaptedTypes() {
         return new Class[]{Float.class, float.class};
+    }
+
+    @Override
+    public Function<String, ? extends SettingParser> parserSuppler() {
+        return FloatParser::new;
     }
 }

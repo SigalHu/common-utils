@@ -1,13 +1,16 @@
 package com.github.sigalhu.setting.commons;
 
 import com.github.sigalhu.setting.reporters.AdaptedTypeReporter;
+import com.github.sigalhu.setting.reporters.SupplerReporter;
 import org.apache.commons.lang3.math.NumberUtils;
+
+import java.util.function.Function;
 
 /**
  * @author huxujun
  * @date 2019/11/2
  */
-public class ByteParser extends BaseSettingParser<Byte> implements AdaptedTypeReporter {
+public class ByteParser extends BaseSettingParser<Byte> implements AdaptedTypeReporter, SupplerReporter {
 
     public ByteParser(String setting) {
         this(null, setting);
@@ -33,5 +36,10 @@ public class ByteParser extends BaseSettingParser<Byte> implements AdaptedTypeRe
     @Override
     public Class[] adaptedTypes() {
         return new Class[]{Byte.class, byte.class};
+    }
+
+    @Override
+    public Function<String, ? extends SettingParser> parserSuppler() {
+        return ByteParser::new;
     }
 }
