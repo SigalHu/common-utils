@@ -1,17 +1,15 @@
 package com.github.sigalhu.setting.commons;
 
 import com.github.sigalhu.setting.reporters.AdaptedTypeReporter;
-import com.github.sigalhu.setting.reporters.SupplerReporter;
 import org.apache.commons.lang3.BooleanUtils;
 
 import java.util.Objects;
-import java.util.function.Function;
 
 /**
  * @author huxujun
  * @date 2019/11/2
  */
-public class BooleanParser extends BaseSettingParser<Boolean> implements AdaptedTypeReporter, SupplerReporter {
+public class BooleanParser extends BaseSettingParser<Boolean> implements AdaptedTypeReporter {
 
     public BooleanParser(String setting) {
         this(null, setting);
@@ -38,10 +36,5 @@ public class BooleanParser extends BaseSettingParser<Boolean> implements Adapted
     @Override
     public Class[] adaptedTypes() {
         return new Class[]{Boolean.class, boolean.class};
-    }
-
-    @Override
-    public Function<String, ? extends SettingParser> parserSuppler() {
-        return BooleanParser::new;
     }
 }

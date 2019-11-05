@@ -1,17 +1,14 @@
 package com.github.sigalhu.setting.commons;
 
-
 import com.github.sigalhu.setting.reporters.AdaptedTypeReporter;
-import com.github.sigalhu.setting.reporters.SupplerReporter;
 
 import java.util.Objects;
-import java.util.function.Function;
 
 /**
  * @author huxujun
  * @date 2019/11/2
  */
-public class StringParser extends BaseSettingParser<String> implements AdaptedTypeReporter, SupplerReporter {
+public class StringParser extends BaseSettingParser<String> implements AdaptedTypeReporter {
 
     public StringParser(String setting) {
         this(null, setting);
@@ -37,10 +34,5 @@ public class StringParser extends BaseSettingParser<String> implements AdaptedTy
     @Override
     public Class[] adaptedTypes() {
         return new Class[]{String.class};
-    }
-
-    @Override
-    public Function<String, ? extends SettingParser> parserSuppler() {
-        return StringParser::new;
     }
 }
