@@ -11,6 +11,13 @@ public interface SettingParser<T> {
     String DELIMITER = ".";
 
     /**
+     * 获取指定配置项
+     *
+     * @return
+     */
+    String setting();
+
+    /**
      * 解析指定配置
      *
      * @param settings 所有配置

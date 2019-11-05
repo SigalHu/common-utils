@@ -46,6 +46,11 @@ public abstract class BaseSettingParser<T> implements SettingParser<T> {
     }
 
     @Override
+    public String setting() {
+        return setting;
+    }
+
+    @Override
     public T parse(Map<String, String> settings) {
         return parse(settings, defaultValue);
     }
