@@ -22,6 +22,8 @@
     * 提升计时精度
 * 升级 BeanUtils，功能包括：
     * 支持将 Method 和 Constructor 转换为函数式接口，调用性能接近直接调用
+* 升级 NumberUtils，功能包括：
+    * 支持解析字符串为基本数据类型
 * 新增 JvmUtils，功能包括：
     * 支持获取 GC 总次数
     * 支持主动触发 GC
