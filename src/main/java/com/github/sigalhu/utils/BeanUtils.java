@@ -35,7 +35,7 @@ public class BeanUtils {
     private static Map<Class, Method> invokedMethodCache = new ConcurrentHashMap<>();
 
     /**
-     * 通过 {@link Method} 生成 {@link FunctionalInterface}
+     * 通过 {@link Executable} 生成 {@link FunctionalInterface}
      *
      * @param method
      * @param invokedType
