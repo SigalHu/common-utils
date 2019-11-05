@@ -1,5 +1,7 @@
 package com.github.sigalhu.setting.commons;
 
+import com.github.sigalhu.setting.reporters.AdaptedTypeReporter;
+
 import java.util.Objects;
 
 /**

@@ -1,5 +1,6 @@
 package com.github.sigalhu.setting.commons;
 
+import com.github.sigalhu.setting.reporters.AdaptedTypeReporter;
 import org.apache.commons.lang3.math.NumberUtils;
 
 /**
