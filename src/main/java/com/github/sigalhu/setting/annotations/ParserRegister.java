@@ -7,16 +7,16 @@ import java.lang.annotation.Target;
 
 /**
  * @author huxujun
- * @date 2019/11/4
+ * @date 2019/11/5
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface SettingConfiguration {
+public @interface ParserRegister {
 
     /**
-     * 配置的前缀
+     * 获取解析器适配的类型
      *
      * @return
      */
-    String prefix() default "";
+    Class[] value();
 }

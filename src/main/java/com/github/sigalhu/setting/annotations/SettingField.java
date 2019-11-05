@@ -1,6 +1,5 @@
 package com.github.sigalhu.setting.annotations;
 
-
 import com.github.sigalhu.setting.commons.SettingParser;
 import com.github.sigalhu.setting.commons.VoidParser;
 
@@ -17,7 +16,17 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface SettingField {
 
-    String value() default "";
+    /**
+     * 配置项
+     *
+     * @return
+     */
+    String value();
 
+    /**
+     * 对应配置的解析器
+     *
+     * @return
+     */
     Class<? extends SettingParser> parser() default VoidParser.class;
 }
