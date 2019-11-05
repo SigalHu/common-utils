@@ -1,13 +1,14 @@
 package com.github.sigalhu.setting.commons;
 
-import com.github.sigalhu.setting.reporters.AdaptedTypeReporter;
+import com.github.sigalhu.setting.annotations.ParserRegister;
 import org.apache.commons.lang3.math.NumberUtils;
 
 /**
  * @author huxujun
  * @date 2019/11/2
  */
-public class LongParser extends BaseSettingParser<Long> implements AdaptedTypeReporter {
+@ParserRegister({Long.class, long.class})
+public class LongParser extends BaseSettingParser<Long> {
 
     public LongParser(String setting) {
         this(null, setting);
@@ -28,10 +29,5 @@ public class LongParser extends BaseSettingParser<Long> implements AdaptedTypeRe
     @Override
     protected Long parseString(String str, Long defaultValue) {
         return NumberUtils.toLong(str, defaultValue);
-    }
-
-    @Override
-    public Class[] adaptedTypes() {
-        return new Class[]{Long.class, long.class};
     }
 }

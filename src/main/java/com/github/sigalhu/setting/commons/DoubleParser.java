@@ -1,13 +1,14 @@
 package com.github.sigalhu.setting.commons;
 
-import com.github.sigalhu.setting.reporters.AdaptedTypeReporter;
+import com.github.sigalhu.setting.annotations.ParserRegister;
 import org.apache.commons.lang3.math.NumberUtils;
 
 /**
  * @author huxujun
  * @date 2019/11/2
  */
-public class DoubleParser extends BaseSettingParser<Double> implements AdaptedTypeReporter {
+@ParserRegister({Double.class, double.class})
+public class DoubleParser extends BaseSettingParser<Double> {
 
     public DoubleParser(String setting) {
         this(null, setting);
@@ -28,10 +29,5 @@ public class DoubleParser extends BaseSettingParser<Double> implements AdaptedTy
     @Override
     protected Double parseString(String str, Double defaultValue) {
         return NumberUtils.toDouble(str, defaultValue);
-    }
-
-    @Override
-    public Class[] adaptedTypes() {
-        return new Class[]{Double.class, double.class};
     }
 }

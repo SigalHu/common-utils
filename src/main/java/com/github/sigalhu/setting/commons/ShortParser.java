@@ -1,13 +1,14 @@
 package com.github.sigalhu.setting.commons;
 
-import com.github.sigalhu.setting.reporters.AdaptedTypeReporter;
+import com.github.sigalhu.setting.annotations.ParserRegister;
 import org.apache.commons.lang3.math.NumberUtils;
 
 /**
  * @author huxujun
  * @date 2019/11/2
  */
-public class ShortParser extends BaseSettingParser<Short> implements AdaptedTypeReporter {
+@ParserRegister({Short.class, short.class})
+public class ShortParser extends BaseSettingParser<Short> {
 
     public ShortParser(String setting) {
         this(null, setting);
@@ -28,10 +29,5 @@ public class ShortParser extends BaseSettingParser<Short> implements AdaptedType
     @Override
     protected Short parseString(String str, Short defaultValue) {
         return NumberUtils.toShort(str, defaultValue);
-    }
-
-    @Override
-    public Class[] adaptedTypes() {
-        return new Class[]{Short.class, short.class};
     }
 }

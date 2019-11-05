@@ -1,6 +1,6 @@
 package com.github.sigalhu.setting.commons;
 
-import com.github.sigalhu.setting.reporters.AdaptedTypeReporter;
+import com.github.sigalhu.setting.annotations.ParserRegister;
 
 import java.util.Objects;
 
@@ -8,7 +8,8 @@ import java.util.Objects;
  * @author huxujun
  * @date 2019/11/2
  */
-public class CharacterParser extends BaseSettingParser<Character> implements AdaptedTypeReporter {
+@ParserRegister({Character.class, char.class})
+public class CharacterParser extends BaseSettingParser<Character> {
 
     public CharacterParser(String setting) {
         this(null, setting);
@@ -29,10 +30,5 @@ public class CharacterParser extends BaseSettingParser<Character> implements Ada
     @Override
     protected Character parseString(String str, Character defaultValue) {
         return Objects.nonNull(str) && str.length() == 1 ? str.charAt(0) : defaultValue;
-    }
-
-    @Override
-    public Class[] adaptedTypes() {
-        return new Class[]{Character.class, char.class};
     }
 }

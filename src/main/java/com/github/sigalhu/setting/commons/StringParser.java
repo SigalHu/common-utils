@@ -1,6 +1,6 @@
 package com.github.sigalhu.setting.commons;
 
-import com.github.sigalhu.setting.reporters.AdaptedTypeReporter;
+import com.github.sigalhu.setting.annotations.ParserRegister;
 
 import java.util.Objects;
 
@@ -8,7 +8,8 @@ import java.util.Objects;
  * @author huxujun
  * @date 2019/11/2
  */
-public class StringParser extends BaseSettingParser<String> implements AdaptedTypeReporter {
+@ParserRegister({String.class})
+public class StringParser extends BaseSettingParser<String> {
 
     public StringParser(String setting) {
         this(null, setting);
@@ -29,10 +30,5 @@ public class StringParser extends BaseSettingParser<String> implements AdaptedTy
     @Override
     protected String parseString(String str, String defaultValue) {
         return Objects.nonNull(str) ? str : defaultValue;
-    }
-
-    @Override
-    public Class[] adaptedTypes() {
-        return new Class[]{String.class};
     }
 }
