@@ -1,7 +1,7 @@
 package com.github.sigalhu.setting.commons;
 
 import com.github.sigalhu.setting.annotations.ParserRegister;
-import org.apache.commons.lang3.math.NumberUtils;
+import com.github.sigalhu.utils.NumberUtils;
 
 /**
  * @author huxujun

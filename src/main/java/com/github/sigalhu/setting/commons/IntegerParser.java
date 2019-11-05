@@ -1,7 +1,7 @@
 package com.github.sigalhu.setting.commons;
 
 import com.github.sigalhu.setting.annotations.ParserRegister;
-import org.apache.commons.lang3.math.NumberUtils;
+import com.github.sigalhu.utils.NumberUtils;
 
 /**
  * @author huxujun
@@ -28,6 +28,6 @@ public class IntegerParser extends BaseSettingParser<Integer> {
 
     @Override
     protected Integer parseString(String str, Integer defaultValue) {
-        return NumberUtils.toInt(str, defaultValue);
+        return NumberUtils.toInteger(str, defaultValue);
     }
 }
