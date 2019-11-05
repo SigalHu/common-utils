@@ -71,4 +71,112 @@ public class NumberUtils {
         }
         return object;
     }
+
+    /**
+     * 将字符串解析为 {@link Integer}
+     *
+     * @param str 待解析的字符串
+     * @param defaultValue 默认值
+     * @return
+     */
+    public static Integer toInteger(final String str, final Integer defaultValue) {
+        if (str == null) {
+            return defaultValue;
+        }
+        try {
+            return Integer.parseInt(str);
+        } catch (final NumberFormatException nfe) {
+            return defaultValue;
+        }
+    }
+
+    /**
+     * 将字符串解析为 {@link Long}
+     *
+     * @param str 待解析的字符串
+     * @param defaultValue 默认值
+     * @return
+     */
+    public static Long toLong(final String str, final Long defaultValue) {
+        if (str == null) {
+            return defaultValue;
+        }
+        try {
+            return Long.parseLong(str);
+        } catch (final NumberFormatException nfe) {
+            return defaultValue;
+        }
+    }
+
+    /**
+     * 将字符串解析为 {@link Float}
+     *
+     * @param str 待解析的字符串
+     * @param defaultValue 默认值
+     * @return
+     */
+    public static Float toFloat(final String str, final Float defaultValue) {
+        if (str == null) {
+            return defaultValue;
+        }
+        try {
+            return Float.parseFloat(str);
+        } catch (final NumberFormatException nfe) {
+            return defaultValue;
+        }
+    }
+
+    /**
+     * 将字符串解析为 {@link Double}
+     *
+     * @param str 待解析的字符串
+     * @param defaultValue 默认值
+     * @return
+     */
+    public static Double toDouble(final String str, final Double defaultValue) {
+        if (str == null) {
+            return defaultValue;
+        }
+        try {
+            return Double.parseDouble(str);
+        } catch (final NumberFormatException nfe) {
+            return defaultValue;
+        }
+    }
+
+    /**
+     * 将字符串解析为 {@link Byte}
+     *
+     * @param str 待解析的字符串
+     * @param defaultValue 默认值
+     * @return
+     */
+    public static Byte toByte(final String str, final Byte defaultValue) {
+        if(str == null) {
+            return defaultValue;
+        }
+        try {
+            return Byte.parseByte(str);
+        } catch (final NumberFormatException nfe) {
+            return defaultValue;
+        }
+    }
+
+    /**
+     * 将字符串解析为 {@link Short}
+     *
+     * @param str 待解析的字符串
+     * @param defaultValue 默认值
+     * @return
+     */
+    public static Short toShort(final String str, final Short defaultValue) {
+        if(str == null) {
+            return defaultValue;
+        }
+        try {
+            return Short.parseShort(str);
+        } catch (final NumberFormatException nfe) {
+            return defaultValue;
+        }
+    }
 }
