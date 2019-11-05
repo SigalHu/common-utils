@@ -1,5 +1,6 @@
 package com.github.sigalhu.setting;
 
+import com.github.sigalhu.setting.annotations.ParserRegister;
 import com.github.sigalhu.setting.annotations.SettingConfiguration;
 import com.github.sigalhu.setting.annotations.SettingField;
 import com.github.sigalhu.setting.commons.*;
@@ -7,6 +8,7 @@ import com.github.sigalhu.utils.BeanUtils;
 import com.google.common.base.Preconditions;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.reflections.ReflectionUtils;
@@ -17,6 +19,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
@@ -26,34 +29,45 @@ import java.util.function.Function;
  */
 public class BeanSettingSolver {
 
-    private Map<Class, List<BeanInfo>> beanInfoMap = new HashMap<>();
-    private Map<Class, Function<String, ? extends SettingParser>> parserMap = new HashMap<>();
+    private Map<Class, List<BeanInfo>> beanInfoMap = new ConcurrentHashMap<>();
+    private Map<Class, Function<String, ? extends SettingParser>> parserMap = new ConcurrentHashMap<>();
 
     public BeanSettingSolver() {
-        registerParserMap();
+        registerParser(SettingParser.class.getPackage().getName());
     }
 
-    private void registerParserMap() {
-        registerParser(Boolean.class, BooleanParser::new);
-        registerParser(boolean.class, BooleanParser::new);
-        registerParser(Character.class, CharacterParser::new);
-        registerParser(char.class, CharacterParser::new);
-        registerParser(Byte.class, ByteParser::new);
-        registerParser(byte.class, ByteParser::new);
-        registerParser(Short.class, ShortParser::new);
-        registerParser(short.class, ShortParser::new);
-        registerParser(Integer.class, IntegerParser::new);
-        registerParser(int.class, IntegerParser::new);
-        registerParser(Long.class, LongParser::new);
-        registerParser(long.class, LongParser::new);
-        registerParser(Float.class, FloatParser::new);
-        registerParser(float.class, FloatParser::new);
-        registerParser(Double.class, DoubleParser::new);
-        registerParser(double.class, DoubleParser::new);
-        registerParser(String.class, StringParser::new);
+    public <T> T parse(Map<String, String> settings, T defaultValue) {
+        List<BeanInfo> beanInfos = beanInfoMap.computeIfAbsent(defaultValue.getClass(), this::buildBeanInfos);
+        for (BeanInfo beanInfo : beanInfos) {
+            Object defaultSetting = beanInfo.get(defaultValue);
+            Object setting = beanInfo.getParser().parse(settings, defaultSetting);
+            if (!Objects.equals(setting, defaultSetting)) {
+                beanInfo.set(defaultValue, setting);
+            }
+        }
+        return defaultValue;
+    }
+
+    public void registerParser(String packagePrefix) {
+        Reflections reflections = new Reflections(packagePrefix);
+        reflections.getTypesAnnotatedWith(ParserRegister.class).forEach(parserClazz -> {
+            ParserRegister register = parserClazz.getAnnotation(ParserRegister.class);
+            Preconditions.checkArgument(ArrayUtils.isNotEmpty(register.value()),
+                    String.format("The value of @ParserRegister must be required, and the annotated class is %s", parserClazz.getName()));
+            try {
+                Function<String, ? extends SettingParser> parserSuppler = BeanUtils.function(parserClazz.getConstructor(String.class), Function.class);
+                for (Class clazz : register.value()) {
+                    registerParser(clazz, parserSuppler);
+                }
+            } catch (Exception ex) {
+                throw new IllegalStateException(ex);
+            }
+        });
     }
 
     public void registerParser(Class clazz, Function<String, ? extends SettingParser> parserSuppler) {
+        Preconditions.checkArgument(!parserMap.containsKey(clazz),
+                String.format("The %s have been registered in %s", clazz.getName(), getClass().getName()));
         parserMap.put(clazz, parserSuppler);
     }
 
@@ -66,7 +80,10 @@ public class BeanSettingSolver {
         if (Objects.isNull(clazz) || beanInfoMap.containsKey(clazz)) {
             return;
         }
+        beanInfoMap.put(clazz, buildBeanInfos(clazz));
+    }
 
+    private List<BeanInfo> buildBeanInfos(Class clazz) {
         SettingConfiguration config = (SettingConfiguration) clazz.getAnnotation(SettingConfiguration.class);
         Preconditions.checkNotNull(config,
                 String.format("The %s must be annotated with @SettingConfiguration!", clazz.getName()));
@@ -86,8 +103,16 @@ public class BeanSettingSolver {
                 parserSuppler = parserMap.get(field.getType());
             } else {
                 try {
-                    Constructor<? extends SettingParser> c = settingFieldInfo.getParser().getConstructor(String.class);
+                    Class<? extends SettingParser> parserClazz = settingFieldInfo.getParser();
+                    ParserRegister register = parserClazz.getAnnotation(ParserRegister.class);
+                    if (Objects.nonNull(register)) {
+                        Preconditions.checkArgument(ArrayUtils.contains(register.value(), field.getType()),
+                                String.format("The %s %s#%s is not supported by %s!", field.getType().getName(),
+                                        clazz.getName(), field.getName(), parserClazz.getName()));
+                    }
+                    Constructor<? extends SettingParser> c = parserClazz.getConstructor(String.class);
                     parserSuppler = BeanUtils.function(c, Function.class);
+                    registerParser(field.getType(), parserSuppler);
                 } catch (Exception ex) {
                     throw new IllegalStateException(ex);
                 }
@@ -103,7 +128,7 @@ public class BeanSettingSolver {
             beanInfo.setSetter(BeanUtils.function(rwPair.getRight(), BiConsumer.class));
             beanInfos.add(beanInfo);
         }
-        beanInfoMap.put(clazz, beanInfos);
+        return beanInfos;
     }
 
     private Pair<Method, Method> reflectReaderAndWriter(String fieldName, Class clazz) {
@@ -138,9 +163,32 @@ public class BeanSettingSolver {
     @Data
     private static class BeanInfo {
         private Field field;
-        private Function getter;
-        private BiConsumer setter;
+        private Function<Object, Object> getter;
+        private BiConsumer<Object, Object> setter;
         private SettingParser parser;
+
+        public Object get(Object obj) {
+            try {
+                if (Objects.nonNull(getter)) {
+                    return getter.apply(obj);
+                }
+                return field.get(obj);
+            } catch (Exception ex) {
+                throw new IllegalStateException(ex);
+            }
+        }
+
+        public void set(Object obj, Object value) {
+            try {
+                if (Objects.nonNull(setter)) {
+                    setter.accept(obj, value);
+                    return;
+                }
+                field.set(obj, value);
+            } catch (Exception ex) {
+                throw new IllegalStateException(ex);
+            }
+        }
     }
 
     @Data
