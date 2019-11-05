@@ -6,7 +6,7 @@ import org.apache.commons.lang3.math.NumberUtils;
  * @author huxujun
  * @date 2019/11/2
  */
-public class ShortParser extends BaseSettingParser<Short> {
+public class ShortParser extends BaseSettingParser<Short> implements AdaptedTypeReporter {
 
     public ShortParser(String setting) {
         this(null, setting);
@@ -27,5 +27,10 @@ public class ShortParser extends BaseSettingParser<Short> {
     @Override
     protected Short parseString(String str, Short defaultValue) {
         return NumberUtils.toShort(str, defaultValue);
+    }
+
+    @Override
+    public Class[] adaptedTypes() {
+        return new Class[]{Short.class, short.class};
     }
 }

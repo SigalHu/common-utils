@@ -6,7 +6,7 @@ import org.apache.commons.lang3.math.NumberUtils;
  * @author huxujun
  * @date 2019/11/2
  */
-public class ByteParser extends BaseSettingParser<Byte> {
+public class ByteParser extends BaseSettingParser<Byte> implements AdaptedTypeReporter {
 
     public ByteParser(String setting) {
         this(null, setting);
@@ -27,5 +27,10 @@ public class ByteParser extends BaseSettingParser<Byte> {
     @Override
     protected Byte parseString(String str, Byte defaultValue) {
         return NumberUtils.toByte(str, defaultValue);
+    }
+
+    @Override
+    public Class[] adaptedTypes() {
+        return new Class[]{Byte.class, byte.class};
     }
 }

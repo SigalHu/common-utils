@@ -6,7 +6,7 @@ import java.util.Objects;
  * @author huxujun
  * @date 2019/11/2
  */
-public class StringParser extends BaseSettingParser<String> {
+public class StringParser extends BaseSettingParser<String> implements AdaptedTypeReporter {
 
     public StringParser(String setting) {
         this(null, setting);
@@ -27,5 +27,10 @@ public class StringParser extends BaseSettingParser<String> {
     @Override
     protected String parseString(String str, String defaultValue) {
         return Objects.nonNull(str) ? str : defaultValue;
+    }
+
+    @Override
+    public Class[] adaptedTypes() {
+        return new Class[]{String.class};
     }
 }

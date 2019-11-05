@@ -6,7 +6,7 @@ import org.apache.commons.lang3.math.NumberUtils;
  * @author huxujun
  * @date 2019/11/2
  */
-public class IntegerParser extends BaseSettingParser<Integer> {
+public class IntegerParser extends BaseSettingParser<Integer> implements AdaptedTypeReporter {
 
     public IntegerParser(String setting) {
         this(null, setting);
@@ -27,5 +27,10 @@ public class IntegerParser extends BaseSettingParser<Integer> {
     @Override
     protected Integer parseString(String str, Integer defaultValue) {
         return NumberUtils.toInt(str, defaultValue);
+    }
+
+    @Override
+    public Class[] adaptedTypes() {
+        return new Class[]{Integer.class, int.class};
     }
 }
