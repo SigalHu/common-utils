@@ -3,11 +3,12 @@ package com.github.sigalhu.setting;
 import com.alibaba.fastjson.JSON;
 import com.github.sigalhu.setting.annotations.SettingConfiguration;
 import com.github.sigalhu.setting.annotations.SettingField;
-import lombok.Data;
+import lombok.*;
 import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author huxujun
@@ -22,22 +23,47 @@ public class BeanSettingSolverTest {
         settings.put("bean.test.name", "test");
 
         BeanSettingSolver solver = new BeanSettingSolver();
-        Person person = solver.parse(settings, new Person());
-        System.err.println(JSON.toJSONString(person));
-        person = solver.parse(settings, new Person());
-        System.err.println(JSON.toJSONString(person));
+        Student student = solver.parse(settings, new Student());
+        System.err.println(JSON.toJSONString(student));
     }
 
     @Data
-    @SettingConfiguration(prefix = "bean.test.")
+    @NoArgsConstructor
     public static class Person {
-        @SettingField(value = "id")
-        private long id = 1L;
-        @SettingField("name")
+        @SettingField("id")
+        private Long id;
+        @SettingField("id")
         private String name;
+        @SettingField("id")
         private Integer age;
+        @SettingField("id")
         private Double height;
+        @SettingField("id")
         private Double weight;
+        @SettingField("id")
         private String phone;
+    }
+
+    @Data
+    @ToString(callSuper = true)
+    @EqualsAndHashCode(callSuper = true)
+    @SettingConfiguration(prefix = "bean.test.")
+    public static class Student extends Person {
+        private Set<Subject> transcript;
+        private Subject[] lastTrans;
+        private int[] scores;
+
+        @Override
+        @SettingField("id2")
+        public void setId(Long id) {
+            super.setId(id);
+        }
+    }
+
+    @Data
+    @AllArgsConstructor
+    public static class Subject {
+        private String name;
+        private Integer score;
     }
 }
