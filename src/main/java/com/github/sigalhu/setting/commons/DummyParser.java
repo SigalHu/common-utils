@@ -1,4 +1,4 @@
-package com.github.sigalhu.setting;
+package com.github.sigalhu.setting.commons;
 
 /**
  * @author huxujun

@@ -1,4 +1,4 @@
-package com.github.sigalhu.setting;
+package com.github.sigalhu.setting.commons;
 
 import org.apache.commons.lang3.math.NumberUtils;
 

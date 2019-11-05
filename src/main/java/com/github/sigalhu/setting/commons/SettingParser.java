@@ -1,4 +1,4 @@
-package com.github.sigalhu.setting;
+package com.github.sigalhu.setting.commons;
 
 import java.util.Map;
 
@@ -9,7 +9,7 @@ import java.util.Map;
 public interface SettingParser<T> {
 
     String DELIMITER = ".";
-    
+
     /**
      * 解析指定配置
      *
