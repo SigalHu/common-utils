@@ -44,6 +44,9 @@ public class BeanUtils {
      */
     @SuppressWarnings("unchecked")
     public static <T> T function(Executable method, Class invokedType) {
+        if (Objects.isNull(method) || Objects.isNull(invokedType)) {
+            return null;
+        }
         Assert.isTrue(invokedType.isAnnotationPresent(FunctionalInterface.class),
                 "The invokedType must be a functional interface!");
         Method invokedMethod = invokedMethodCache.computeIfAbsent(invokedType, type -> {
