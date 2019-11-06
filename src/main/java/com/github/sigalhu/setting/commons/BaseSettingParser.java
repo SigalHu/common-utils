@@ -51,6 +51,14 @@ public abstract class BaseSettingParser<T> implements SettingParser<T> {
     }
 
     @Override
+    public String valueOf(T objValue) {
+        if (Objects.isNull(objValue)) {
+            return null;
+        }
+        return String.valueOf(objValue);
+    }
+
+    @Override
     public T parse(Map<String, String> settings) {
         return parse(settings, defaultValue);
     }

@@ -18,6 +18,14 @@ public interface SettingParser<T> {
     String setting();
 
     /**
+     * 将配置的实例转化为字符串
+     *
+     * @param objValue
+     * @return
+     */
+    String valueOf(T objValue);
+
+    /**
      * 解析指定配置
      *
      * @param settings 所有配置
