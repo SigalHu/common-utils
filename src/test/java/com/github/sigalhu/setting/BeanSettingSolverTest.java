@@ -25,6 +25,7 @@ public class BeanSettingSolverTest {
         BeanSettingSolver solver = new BeanSettingSolver();
         Student student = solver.parse(settings, new Student());
         System.err.println(JSON.toJSONString(student));
+        System.err.println(solver.collectSettings(student));
     }
 
     @Data

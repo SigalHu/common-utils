@@ -36,8 +36,19 @@ public class BeanSettingSolver {
         registerParser(SettingParser.class.getPackage().getName());
     }
 
+    public Map<String, String> collectSettings(Object value) {
+        List<BeanInfo> beanInfos = getBeanInfos(value.getClass());
+        Map<String, String> settings = new HashMap<>();
+        for (BeanInfo beanInfo : beanInfos) {
+            String settingName = beanInfo.getParser().setting();
+            Object settingValue = beanInfo.get(value);
+            settings.put(settingName, String.valueOf(settingValue));
+        }
+        return settings;
+    }
+
     public <T> T parse(Map<String, String> settings, T defaultValue) {
-        List<BeanInfo> beanInfos = beanInfoMap.computeIfAbsent(defaultValue.getClass(), this::buildBeanInfos);
+        List<BeanInfo> beanInfos = getBeanInfos(defaultValue.getClass());
         for (BeanInfo beanInfo : beanInfos) {
             Object defaultSetting = beanInfo.get(defaultValue);
             Object setting = beanInfo.getParser().parse(settings, defaultSetting);
@@ -81,6 +92,10 @@ public class BeanSettingSolver {
             return;
         }
         beanInfoMap.put(clazz, buildBeanInfos(clazz));
+    }
+
+    private List<BeanInfo> getBeanInfos(Class clazz) {
+        return beanInfoMap.computeIfAbsent(clazz, this::buildBeanInfos);
     }
 
     private List<BeanInfo> buildBeanInfos(Class clazz) {
