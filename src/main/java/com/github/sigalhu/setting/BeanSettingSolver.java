@@ -42,7 +42,7 @@ public class BeanSettingSolver {
         for (BeanInfo beanInfo : beanInfos) {
             String settingName = beanInfo.getParser().setting();
             Object settingValue = beanInfo.get(value);
-            settings.put(settingName, String.valueOf(settingValue));
+            settings.put(settingName, beanInfo.getParser().valueOf(settingValue));
         }
         return settings;
     }
