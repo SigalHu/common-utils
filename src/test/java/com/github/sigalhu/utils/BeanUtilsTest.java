@@ -253,6 +253,17 @@ public class BeanUtilsTest {
         System.err.println(end - start);
     }
 
+    @Test
+    public void parseGenericClass() {
+        System.err.println(BeanUtils.parseGenericClass(G2.class));
+    }
+
+    public static class G1<T, U> {
+    }
+
+    public static class G2 extends G1<Person, Student> {
+    }
+
     @Data
     @NoArgsConstructor
     public static class Person {

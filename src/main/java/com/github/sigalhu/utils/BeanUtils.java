@@ -1,15 +1,14 @@
 package com.github.sigalhu.utils;
 
+import com.google.common.collect.Lists;
+
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.invoke.LambdaMetafactory;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Executable;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiConsumer;
@@ -177,5 +176,21 @@ public class BeanUtils {
                 fieldValues.add(entity);
             }
         }
+    }
+
+    public static List<Class> parseGenericClass(Class clazz) {
+        List<Class> classes = Lists.newArrayList();
+        Type superClass = clazz.getGenericSuperclass();
+        if (!(superClass instanceof ParameterizedType)) {
+            return classes;
+        }
+        Type[] types = ((ParameterizedType) superClass).getActualTypeArguments();
+        if (ArrayUtils.isEmpty(types)) {
+            return classes;
+        }
+        for (Type type : types) {
+            classes.add((Class) type);
+        }
+        return classes;
     }
 }
