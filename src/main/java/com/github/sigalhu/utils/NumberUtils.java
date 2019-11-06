@@ -11,7 +11,7 @@ import java.util.function.Function;
  * @author huxujun
  * @date 2019-07-29
  */
-public class NumberUtils {
+public class NumberUtils extends org.apache.commons.lang3.math.NumberUtils {
 
     /**
      * 比较数据类型的数值大小

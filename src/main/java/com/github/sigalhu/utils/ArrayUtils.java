@@ -7,7 +7,7 @@ import java.util.List;
  * @author huxujun
  * @date 2019-08-18
  */
-public class ArrayUtils {
+public class ArrayUtils extends org.apache.commons.lang3.ArrayUtils {
 
     /**
      * 将包括基本数据类型在内的数组对象转化为 {@link Object} 数组
@@ -17,21 +17,21 @@ public class ArrayUtils {
      */
     public static Object[] toObject(Object array) {
         if (array instanceof boolean[]) {
-            return org.apache.commons.lang3.ArrayUtils.toObject((boolean[]) array);
+            return toObject((boolean[]) array);
         } else if (array instanceof char[]) {
-            return org.apache.commons.lang3.ArrayUtils.toObject((char[]) array);
+            return toObject((char[]) array);
         } else if (array instanceof byte[]) {
-            return org.apache.commons.lang3.ArrayUtils.toObject((byte[]) array);
+            return toObject((byte[]) array);
         } else if (array instanceof short[]) {
-            return org.apache.commons.lang3.ArrayUtils.toObject((short[]) array);
+            return toObject((short[]) array);
         } else if (array instanceof int[]) {
-            return org.apache.commons.lang3.ArrayUtils.toObject((int[]) array);
+            return toObject((int[]) array);
         } else if (array instanceof long[]) {
-            return org.apache.commons.lang3.ArrayUtils.toObject((long[]) array);
+            return toObject((long[]) array);
         } else if (array instanceof float[]) {
-            return org.apache.commons.lang3.ArrayUtils.toObject((float[]) array);
+            return toObject((float[]) array);
         } else if (array instanceof double[]) {
-            return org.apache.commons.lang3.ArrayUtils.toObject((double[]) array);
+            return toObject((double[]) array);
         }
         return (Object[]) array;
     }
