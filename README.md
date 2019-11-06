@@ -22,6 +22,7 @@
     * 提升计时精度
 * 升级 BeanUtils，功能包括：
     * 支持将 Method 和 Constructor 转换为函数式接口，调用性能接近直接调用
+    * 支持解析泛型类型
 * 升级 NumberUtils，功能包括：
     * 支持解析字符串为基本数据类型
     * 继承 commons-lang3 中的 NumberUtils，增强通用性
