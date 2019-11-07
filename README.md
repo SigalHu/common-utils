@@ -8,13 +8,13 @@
 <dependency>
   <groupId>com.github.sigalhu</groupId>
   <artifactId>common-utils</artifactId>
-  <version>1.0.6</version>
+  <version>1.0.7</version>
 </dependency>
 ```
 
 ### 版本升级
 
-**feature**
+**1.0.7 配置解析器和最近窗口均值计算器**
 
 * 升级 CostTimer，功能包括：
     * 支持添加耗时信息
