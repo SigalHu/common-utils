@@ -108,7 +108,7 @@ public class BeanSettingSolver {
         for (Field field : ReflectionUtils.getAllFields(clazz)) {
             field.setAccessible(true);
             Pair<Method, Method> rwPair = reflectReaderAndWriter(field.getName(), clazz);
-            SettingFieldInfo settingFieldInfo = buildSettingFieldInfo(field.getAnnotation(SettingField.class),
+            SettingFieldInfo settingFieldInfo = buildSettingFieldInfo(field, field.getAnnotation(SettingField.class),
                     Objects.nonNull(rwPair.getRight()) ? rwPair.getRight().getAnnotation(SettingField.class) : null);
             if (Objects.isNull(settingFieldInfo)) {
                 continue;
@@ -155,22 +155,27 @@ public class BeanSettingSolver {
         return Pair.of(null, null);
     }
 
-    private SettingFieldInfo buildSettingFieldInfo(SettingField... fields) {
+    private SettingFieldInfo buildSettingFieldInfo(Field field, SettingField... settingFields) {
         String setting = null;
         Class<? extends SettingParser> parser = null;
-        for (SettingField field : fields) {
-            if (Objects.isNull(field)) {
+        boolean settingExist = false;
+        for (SettingField settingField : settingFields) {
+            if (Objects.isNull(settingField)) {
                 continue;
             }
-            if (StringUtils.isNotEmpty(field.value())) {
-                setting = field.value();
+            settingExist = true;
+            if (StringUtils.isNotEmpty(settingField.value())) {
+                setting = settingField.value();
             }
-            if (!VoidParser.class.equals(field.parser())) {
-                parser = field.parser();
+            if (!VoidParser.class.equals(settingField.parser())) {
+                parser = settingField.parser();
             }
         }
-        if (Objects.isNull(setting)) {
+        if (!settingExist) {
             return null;
+        }
+        if (StringUtils.isEmpty(setting)) {
+            setting = field.getName();
         }
         return new SettingFieldInfo(setting, parser);
     }

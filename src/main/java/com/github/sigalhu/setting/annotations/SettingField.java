@@ -21,7 +21,7 @@ public @interface SettingField {
      *
      * @return
      */
-    String value();
+    String value() default "";
 
     /**
      * 对应配置的解析器

@@ -41,7 +41,7 @@ public class BeanSettingSolverTest {
         private Double height;
         @SettingField("id")
         private Double weight;
-        @SettingField("id")
+        @SettingField
         private String phone;
     }
 
