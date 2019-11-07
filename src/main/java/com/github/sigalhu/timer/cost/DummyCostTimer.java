@@ -41,8 +41,12 @@ public class DummyCostTimer extends DetailCostTimer {
         super(costDetail);
     }
 
+    public static CostTimer dummy() {
+        return DUMMY_COST_TIMER;
+    }
+
     @Override
     public CostTimer childCostTimer(String name) {
-        return DUMMY_COST_TIMER;
+        return dummy();
     }
 }
