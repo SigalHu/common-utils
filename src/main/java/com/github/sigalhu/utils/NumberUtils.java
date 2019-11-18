@@ -50,6 +50,21 @@ public class NumberUtils extends org.apache.commons.lang3.math.NumberUtils {
     }
 
     /**
+     * 判断是否为基本数值类型
+     *
+     * @param type 待判断类型
+     * @return
+     */
+    public static boolean isPrimitive(Type type) {
+        return Long.class.equals(type) || long.class.equals(type)
+                || Integer.class.equals(type) || int.class.equals(type)
+                || Short.class.equals(type) || short.class.equals(type)
+                || Byte.class.equals(type) || byte.class.equals(type)
+                || Double.class.equals(type) || double.class.equals(type)
+                || Float.class.equals(type) || float.class.equals(type);
+    }
+
+    /**
      * 将一个数值转换成指定的基本数值类型
      *
      * @param number 待转换数值
