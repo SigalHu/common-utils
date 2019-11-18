@@ -90,6 +90,31 @@ public class NumberUtils extends org.apache.commons.lang3.math.NumberUtils {
     }
 
     /**
+     * 将一个数值字符串转换成指定的基本数值类型
+     *
+     * @param number 待转换数值字符串
+     * @param type   基本数值类型
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public static <T extends Number> T toPrimitive(String number, Type type) {
+        if (Long.class.equals(type) || long.class.equals(type)) {
+            return (T) Long.valueOf(number);
+        } else if (Integer.class.equals(type) || int.class.equals(type)) {
+            return (T) Integer.valueOf(number);
+        } else if (Short.class.equals(type) || short.class.equals(type)) {
+            return (T) Short.valueOf(number);
+        } else if (Byte.class.equals(type) || byte.class.equals(type)) {
+            return (T) Byte.valueOf(number);
+        } else if (Double.class.equals(type) || double.class.equals(type)) {
+            return (T) Double.valueOf(number);
+        } else if (Float.class.equals(type) || float.class.equals(type)) {
+            return (T) Float.valueOf(number);
+        }
+        throw new IllegalArgumentException(String.format("The type %s must be a primitive type!", type.getTypeName()));
+    }
+
+    /**
      * 将数据类型的数值转换为 64 bits
      *
      * @param object 数值
