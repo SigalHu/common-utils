@@ -44,7 +44,9 @@ public class JsonUtils {
             return null;
         }
         try {
-            if (result instanceof JSONObject) {
+            if (Object.class.equals(type)) {
+                return (T) result;
+            } else if (result instanceof JSONObject) {
                 return ((JSONObject) result).toJavaObject(type);
             } else if (result instanceof JSONArray) {
                 return ((JSONArray) result).toJavaObject(type);
