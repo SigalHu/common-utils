@@ -178,6 +178,12 @@ public class BeanUtils {
         }
     }
 
+    /**
+     * 获取泛型类的泛型列表
+     *
+     * @param clazz 泛型类
+     * @return
+     */
     public static List<Class> parseGenericClass(Class clazz) {
         List<Class> classes = Lists.newArrayList();
         Type superClass = clazz.getGenericSuperclass();
@@ -189,7 +195,9 @@ public class BeanUtils {
             return classes;
         }
         for (Type type : types) {
-            classes.add((Class) type);
+            if (type instanceof Class) {
+                classes.add((Class) type);
+            }
         }
         return classes;
     }

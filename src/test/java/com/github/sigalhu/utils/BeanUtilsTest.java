@@ -256,6 +256,8 @@ public class BeanUtilsTest {
     @Test
     public void parseGenericClass() {
         System.err.println(BeanUtils.parseGenericClass(G2.class));
+        G1<Person, Student> g1 = new G1<>();
+        System.err.println(BeanUtils.parseGenericClass(g1.getClass()));
     }
 
     public static class G1<T, U> {

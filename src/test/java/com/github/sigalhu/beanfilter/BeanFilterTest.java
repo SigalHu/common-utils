@@ -1,6 +1,5 @@
 package com.github.sigalhu.beanfilter;
 
-import com.github.sigalhu.utils.BeanUtilsTest;
 import com.google.common.collect.Sets;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,7 +20,7 @@ public class BeanFilterTest {
     public void test() {
         Assert.assertTrue(Filters.and(
                 Filters.eq("name", "student"),
-                Filters.contain("transcript", new BeanUtilsTest.Subject("mathematics", 100)),
+                Filters.contain("transcript", new Subject("mathematics", 100)),
                 Filters.gt("id", 0L),
                 Filters.gte("age", 18),
                 Filters.lt("height", 1.8D),
@@ -36,8 +35,8 @@ public class BeanFilterTest {
         ).test(generateStudent()));
     }
 
-    private static BeanUtilsTest.Student generateStudent() {
-        BeanUtilsTest.Student student = new BeanUtilsTest.Student();
+    private static Student generateStudent() {
+        Student student = new Student();
         student.setId(1L);
         student.setName("student");
         student.setAge(18);
@@ -45,10 +44,10 @@ public class BeanFilterTest {
         student.setWeight(65.5D);
         student.setPhone("01234567");
         student.setTranscript(Sets.newHashSet(
-                new BeanUtilsTest.Subject("mathematics", 100),
-                new BeanUtilsTest.Subject("physics", 99),
-                new BeanUtilsTest.Subject("organism", 98),
-                new BeanUtilsTest.Subject("geography", 97)
+                new Subject("mathematics", 100),
+                new Subject("physics", 99),
+                new Subject("organism", 98),
+                new Subject("geography", 97)
         ));
         return student;
     }
@@ -66,8 +65,8 @@ public class BeanFilterTest {
     @Data
     @ToString(callSuper = true)
     @EqualsAndHashCode(callSuper = true)
-    public static class Student extends BeanUtilsTest.Person {
-        private Set<BeanUtilsTest.Subject> transcript;
+    public static class Student extends Person {
+        private Set<Subject> transcript;
     }
 
     @Data
