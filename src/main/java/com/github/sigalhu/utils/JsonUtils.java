@@ -1,7 +1,12 @@
 package com.github.sigalhu.utils;
 
-import com.alibaba.fastjson.JSONPath;
+import com.alibaba.fastjson.*;
+import com.alibaba.fastjson.util.ParameterizedTypeImpl;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import org.apache.commons.collections4.CollectionUtils;
 
+import java.lang.reflect.Type;
 import java.util.*;
 
 /**
@@ -15,29 +20,43 @@ public class JsonUtils {
      *
      * @param jsonObject
      * @param path
-     * @param clazz
+     * @param reference
      * @param <T>
      * @return
      */
-    public static <T> Optional<T> parseJsonPath(Object jsonObject, String path, Class<T> clazz) {
+    public static <T> T parseJsonPath(Object jsonObject, String path, TypeReference reference) {
+        return parseJsonPath(jsonObject, path, reference.getType());
+    }
+
+    /**
+     * 获取 JSON Path 下的值
+     *
+     * @param jsonObject
+     * @param path
+     * @param type
+     * @param <T>
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public static <T> T parseJsonPath(Object jsonObject, String path, Type type) {
         Object result = JSONPath.eval(jsonObject, path);
         if (Objects.isNull(result)) {
-            return Optional.empty();
+            return null;
         }
-        if (Long.class.equals(clazz)) {
-            return Optional.of(clazz.cast(((Number) result).longValue()));
-        } else if (Integer.class.equals(clazz)) {
-            return Optional.of(clazz.cast(((Number) result).intValue()));
-        } else if (Short.class.equals(clazz)) {
-            return Optional.of(clazz.cast(((Number) result).shortValue()));
-        } else if (Byte.class.equals(clazz)) {
-            return Optional.of(clazz.cast(((Number) result).byteValue()));
-        } else if (Double.class.equals(clazz)) {
-            return Optional.of(clazz.cast(((Number) result).doubleValue()));
-        } else if (Float.class.equals(clazz)) {
-            return Optional.of(clazz.cast(((Number) result).floatValue()));
+        try {
+            if (result instanceof JSONObject) {
+                return ((JSONObject) result).toJavaObject(type);
+            } else if (result instanceof JSONArray) {
+                return ((JSONArray) result).toJavaObject(type);
+            } else if (String.class.equals(type)) {
+                return (T) String.valueOf(result);
+            } else if (NumberUtils.isPrimitive(type)) {
+                return result instanceof Number ? (T) NumberUtils.toPrimitive((Number) result, type) :
+                        (T) NumberUtils.toPrimitive(String.valueOf(result), type);
+            }
+        } catch (Exception ex) {
         }
-        return Optional.of(clazz.cast(result));
+        return JSON.parseObject(JSON.toJSONString(result), type);
     }
 
     /**
@@ -84,5 +103,50 @@ public class JsonUtils {
             return left.equals(right);
         }
         return false;
+    }
+
+    /**
+     * 构建反序列化类型，例如：
+     * 通过 {@code buildGenericType(Set.class, List.class, String.class)} 来构建 {@code Set<List<String>>}
+     *
+     * @param types
+     * @return
+     */
+    public static Type buildGenericType(Type... types) {
+        ParameterizedTypeImpl beforeType = null;
+        if (types != null && types.length > 0) {
+            for (int i = types.length - 1; i > 0; i--) {
+                beforeType = new ParameterizedTypeImpl(new Type[]{beforeType == null ? types[i] : beforeType}, null, types[i - 1]);
+            }
+        }
+        return beforeType;
+    }
+
+    /**
+     * 构建反序列化类型，例如：
+     * 通过 {@code buildGenericType(new GenericTypeNode(Map.class, new GenericTypeNode(String), new GenericTypeNode(Long.class)))}
+     * 来构建 {@code Map<String, Long>}
+     *
+     * @param rootNodes
+     * @return
+     */
+    public static Type buildGenericType(GenericTypeNode rootNodes) {
+        List<GenericTypeNode> nextNodes = rootNodes.getNextNodes();
+        return CollectionUtils.isEmpty(nextNodes) ? rootNodes.getType() :
+                new ParameterizedTypeImpl(nextNodes.stream().map(JsonUtils::buildGenericType).toArray(Type[]::new), null, rootNodes.getType());
+    }
+
+    @Getter
+    @AllArgsConstructor
+    public static class GenericTypeNode {
+        private Type type;
+        private List<GenericTypeNode> nextNodes;
+
+        public GenericTypeNode(Type type, GenericTypeNode... nextNodes) {
+            this.type = type;
+            if (org.apache.commons.lang3.ArrayUtils.isNotEmpty(nextNodes)) {
+                this.nextNodes = Arrays.asList(nextNodes);
+            }
+        }
     }
 }
