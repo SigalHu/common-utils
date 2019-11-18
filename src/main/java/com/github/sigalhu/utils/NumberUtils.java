@@ -2,6 +2,7 @@ package com.github.sigalhu.utils;
 
 import org.apache.commons.collections4.CollectionUtils;
 
+import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Objects;
@@ -49,6 +50,31 @@ public class NumberUtils extends org.apache.commons.lang3.math.NumberUtils {
     }
 
     /**
+     * 将一个数值转换成指定的基本数值类型
+     *
+     * @param number 待转换数值
+     * @param type   基本数值类型
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public static <T extends Number, U extends Number> T toPrimitive(U number, Type type) {
+        if (Long.class.equals(type) || long.class.equals(type)) {
+            return (T) Long.valueOf(number.longValue());
+        } else if (Integer.class.equals(type) || int.class.equals(type)) {
+            return (T) Integer.valueOf(number.intValue());
+        } else if (Short.class.equals(type) || short.class.equals(type)) {
+            return (T) Short.valueOf(number.shortValue());
+        } else if (Byte.class.equals(type) || byte.class.equals(type)) {
+            return (T) Byte.valueOf(number.byteValue());
+        } else if (Double.class.equals(type) || double.class.equals(type)) {
+            return (T) Double.valueOf(number.doubleValue());
+        } else if (Float.class.equals(type) || float.class.equals(type)) {
+            return (T) Float.valueOf(number.floatValue());
+        }
+        throw new IllegalArgumentException(String.format("The type %s must be a primitive type!", type.getTypeName()));
+    }
+
+    /**
      * 将数据类型的数值转换为 64 bits
      *
      * @param object 数值
@@ -75,7 +101,7 @@ public class NumberUtils extends org.apache.commons.lang3.math.NumberUtils {
     /**
      * 将字符串解析为 {@link Integer}
      *
-     * @param str 待解析的字符串
+     * @param str          待解析的字符串
      * @param defaultValue 默认值
      * @return
      */
@@ -93,7 +119,7 @@ public class NumberUtils extends org.apache.commons.lang3.math.NumberUtils {
     /**
      * 将字符串解析为 {@link Long}
      *
-     * @param str 待解析的字符串
+     * @param str          待解析的字符串
      * @param defaultValue 默认值
      * @return
      */
@@ -111,7 +137,7 @@ public class NumberUtils extends org.apache.commons.lang3.math.NumberUtils {
     /**
      * 将字符串解析为 {@link Float}
      *
-     * @param str 待解析的字符串
+     * @param str          待解析的字符串
      * @param defaultValue 默认值
      * @return
      */
@@ -129,7 +155,7 @@ public class NumberUtils extends org.apache.commons.lang3.math.NumberUtils {
     /**
      * 将字符串解析为 {@link Double}
      *
-     * @param str 待解析的字符串
+     * @param str          待解析的字符串
      * @param defaultValue 默认值
      * @return
      */
@@ -147,12 +173,12 @@ public class NumberUtils extends org.apache.commons.lang3.math.NumberUtils {
     /**
      * 将字符串解析为 {@link Byte}
      *
-     * @param str 待解析的字符串
+     * @param str          待解析的字符串
      * @param defaultValue 默认值
      * @return
      */
     public static Byte toByte(final String str, final Byte defaultValue) {
-        if(str == null) {
+        if (str == null) {
             return defaultValue;
         }
         try {
@@ -165,12 +191,12 @@ public class NumberUtils extends org.apache.commons.lang3.math.NumberUtils {
     /**
      * 将字符串解析为 {@link Short}
      *
-     * @param str 待解析的字符串
+     * @param str          待解析的字符串
      * @param defaultValue 默认值
      * @return
      */
     public static Short toShort(final String str, final Short defaultValue) {
-        if(str == null) {
+        if (str == null) {
             return defaultValue;
         }
         try {

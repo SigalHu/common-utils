@@ -38,12 +38,22 @@ public class NumberUtilsTest {
         assertEquals(1D, NumberUtils.tryConvertTo64Bits(1F));
         @SuppressWarnings("unchecked")
         List<Long> list = (List<Long>) NumberUtils.tryConvertTo64Bits(Lists.newArrayList(
-                Lists.newArrayList(1,2,3),
-                Lists.newArrayList(4F,5F,6F)
+                Lists.newArrayList(1, 2, 3),
+                Lists.newArrayList(4F, 5F, 6F)
         ));
         assertArrayEquals(new Object[]{
-                Lists.newArrayList(1L,2L,3L),
-                Lists.newArrayList(4D,5D,6D)
+                Lists.newArrayList(1L, 2L, 3L),
+                Lists.newArrayList(4D, 5D, 6D)
         }, list.toArray());
+    }
+
+    @Test
+    public void toPrimitive() {
+        assertEquals(Long.class, NumberUtils.toPrimitive(1, Long.class).getClass());
+        assertEquals(Integer.class, NumberUtils.toPrimitive(1, Integer.class).getClass());
+        assertEquals(Short.class, NumberUtils.toPrimitive(1, Short.class).getClass());
+        assertEquals(Byte.class, NumberUtils.toPrimitive(1, Byte.class).getClass());
+        assertEquals(Double.class, NumberUtils.toPrimitive(1, Double.class).getClass());
+        assertEquals(Float.class, NumberUtils.toPrimitive(1, Float.class).getClass());
     }
 }
