@@ -24,6 +24,11 @@
 * 升级 JsonUtils，功能包括：
     * 支持获取 JSON Path 下复杂类型的值
     * 支持构建复杂的 JSON 反序列化类型
+* 升级 JvmUtils，功能包括：
+    * 支持获取 Old GC 总次数
+    * 支持主动触发 Old GC
+    * 支持通过 jmap 触发 Full GC
+    * 支持获取进程 id
 
 **1.0.7 配置解析器和最近窗口均值计算器**
 
