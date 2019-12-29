@@ -8,13 +8,13 @@
 <dependency>
   <groupId>com.github.sigalhu</groupId>
   <artifactId>common-utils</artifactId>
-  <version>1.0.7</version>
+  <version>1.0.8</version>
 </dependency>
 ```
 
 ### 版本升级
 
-**feature**
+**1.0.8 压缩工具和主动触发 GC**
 
 * 新增 CompressUtils，功能包括：
     * 支持 zip 压缩解压
