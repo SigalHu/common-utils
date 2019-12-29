@@ -16,6 +16,8 @@
 
 **feature**
 
+* 新增 CompressUtils，功能包括：
+    * 支持 zip 压缩解压
 * 升级 SettingParser，功能包括：
     * 注解方式支持默认配置项
 * 升级 NumberUtils，功能包括：
