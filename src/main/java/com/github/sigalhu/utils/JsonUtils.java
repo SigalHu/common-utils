@@ -2,18 +2,98 @@ package com.github.sigalhu.utils;
 
 import com.alibaba.fastjson.*;
 import com.alibaba.fastjson.util.ParameterizedTypeImpl;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import com.github.sigalhu.utils.fastjson.GenericTypeNode;
+import com.github.sigalhu.utils.fastjson.JSONPathField;
+import com.github.sigalhu.utils.fastjson.JsonPathInfo;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.reflections.ReflectionUtils;
 
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author huxujun
  * @date 2019-05-20
  */
 public class JsonUtils {
+
+    private static Map<Type, List<JsonPathInfo>> jsonPathInfoMap = new ConcurrentHashMap<>();
+
+    /**
+     * JSON 字符串反序列化为指定类型，支持 {@link JSONPathField}
+     *
+     * @param text
+     * @param clazz
+     * @param <T>
+     * @return
+     */
+    public static <T> T parseJsonPath(String text, Class<T> clazz) {
+        Object object = JSON.parse(text);
+        if (object instanceof JSONObject) {
+            JSONObject jsonObject = (JSONObject) object;
+            completeJsonObject(jsonObject, clazz);
+            return jsonObject.toJavaObject(clazz);
+        }
+        return JSON.parseObject(text, clazz);
+    }
+
+    private static void completeJsonObject(JSONObject object, Type type) {
+        for (JsonPathInfo info : getJsonPathInfos(type)) {
+            Object value = JSONPath.eval(object, info.getJsonPath());
+            object.put(info.getFieldName(), value);
+        }
+    }
+
+    private static List<JsonPathInfo> getJsonPathInfos(Type type) {
+        return jsonPathInfoMap.computeIfAbsent(type, JsonUtils::buildJsonPathInfos);
+    }
+
+    private static List<JsonPathInfo> buildJsonPathInfos(Type type) {
+        List<JsonPathInfo> jsonPathInfos = new ArrayList<>();
+        for (Field field : ReflectionUtils.getAllFields((Class<?>) type)) {
+            field.setAccessible(true);
+            JsonPathInfo jsonPathInfo = buildJsonPathInfo(field);
+            if (Objects.isNull(jsonPathInfo)) {
+                continue;
+            }
+            jsonPathInfos.add(jsonPathInfo);
+        }
+        return jsonPathInfos;
+    }
+
+    private static JsonPathInfo buildJsonPathInfo(Field field) {
+        Method writer = null;
+        try {
+            PropertyDescriptor descriptor = new PropertyDescriptor(field.getName(), field.getDeclaringClass());
+            writer = descriptor.getWriteMethod();
+        } catch (Exception ignored) {
+        }
+        String path = null;
+        if (Objects.nonNull(writer)) {
+            JSONPathField f = writer.getAnnotation(JSONPathField.class);
+            if (Objects.nonNull(f)) {
+                path = f.path();
+            }
+        }
+        if (StringUtils.isEmpty(path)) {
+            JSONPathField f = field.getAnnotation(JSONPathField.class);
+            if (Objects.nonNull(f)) {
+                path = f.path();
+            }
+        }
+        if (StringUtils.isEmpty(path)) {
+            return null;
+        }
+        JsonPathInfo info = new JsonPathInfo();
+        info.setJsonPath(path);
+        info.setFieldName(field.getName());
+        return info;
+    }
 
     /**
      * 获取 JSON Path 下的值
@@ -24,7 +104,7 @@ public class JsonUtils {
      * @param <T>
      * @return
      */
-    public static <T> T parseJsonPath(Object jsonObject, String path, TypeReference reference) {
+    public static <T> T parseJsonPath(Object jsonObject, String path, TypeReference<T> reference) {
         return parseJsonPath(jsonObject, path, reference.getType());
     }
 
@@ -136,19 +216,5 @@ public class JsonUtils {
         List<GenericTypeNode> nextNodes = rootNodes.getNextNodes();
         return CollectionUtils.isEmpty(nextNodes) ? rootNodes.getType() :
                 new ParameterizedTypeImpl(nextNodes.stream().map(JsonUtils::buildGenericType).toArray(Type[]::new), null, rootNodes.getType());
-    }
-
-    @Getter
-    @AllArgsConstructor
-    public static class GenericTypeNode {
-        private Type type;
-        private List<GenericTypeNode> nextNodes;
-
-        public GenericTypeNode(Type type, GenericTypeNode... nextNodes) {
-            this.type = type;
-            if (org.apache.commons.lang3.ArrayUtils.isNotEmpty(nextNodes)) {
-                this.nextNodes = Arrays.asList(nextNodes);
-            }
-        }
     }
 }
