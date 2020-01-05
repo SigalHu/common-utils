@@ -43,9 +43,21 @@ public class JsonUtils {
     }
 
     private static void completeJsonObject(JSONObject object, Type type) {
+        if (Objects.isNull(object)) {
+            return;
+        }
         for (JsonPathInfo info : getJsonPathInfos(type)) {
-            Object value = JSONPath.eval(object, info.getJsonPath());
-            object.put(info.getFieldName(), value);
+            Object value = null;
+            if (StringUtils.isNotBlank(info.getJsonPath())) {
+                value = JSONPath.eval(object, info.getJsonPath());
+                object.put(info.getFieldName(), value);
+            }
+            if (Objects.isNull(value)) {
+                value = object.get(info.getFieldName());
+            }
+            if (value instanceof JSONObject) {
+                completeJsonObject((JSONObject) value, info.getFieldType());
+            }
         }
     }
 
@@ -58,9 +70,6 @@ public class JsonUtils {
         for (Field field : ReflectionUtils.getAllFields((Class<?>) type)) {
             field.setAccessible(true);
             JsonPathInfo jsonPathInfo = buildJsonPathInfo(field);
-            if (Objects.isNull(jsonPathInfo)) {
-                continue;
-            }
             jsonPathInfos.add(jsonPathInfo);
         }
         return jsonPathInfos;
@@ -86,12 +95,12 @@ public class JsonUtils {
                 path = f.path();
             }
         }
-        if (StringUtils.isEmpty(path)) {
-            return null;
-        }
         JsonPathInfo info = new JsonPathInfo();
-        info.setJsonPath(path);
+        if (StringUtils.isNotBlank(path)) {
+            info.setJsonPath(path);
+        }
         info.setFieldName(field.getName());
+        info.setFieldType(field.getGenericType());
         return info;
     }
 
