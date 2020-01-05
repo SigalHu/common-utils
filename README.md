@@ -14,6 +14,11 @@
 
 ### 版本升级
 
+**feature**
+
+* 升级 JsonUtils，功能包括：
+    * 支持反序列化 JSON 为指定类型，包括指定 JSON Path 下的值
+
 **1.0.8 压缩工具和主动触发 GC**
 
 * 新增 CompressUtils，功能包括：
