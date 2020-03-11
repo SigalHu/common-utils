@@ -9,6 +9,8 @@ import org.junit.Test;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
@@ -260,6 +262,12 @@ public class BeanUtilsTest {
         System.err.println(BeanUtils.parseGenericClass(g1.getClass()));
     }
 
+    @Test
+    public void parseGenericInterfaces() {
+        System.err.println(BeanUtils.parseGenericInterfaces(BooleanParser.class).get(Parser.class));
+        System.err.println(Arrays.toString(new BooleanParser().types()));
+    }
+
     public static class G1<T, U> {
     }
 
@@ -300,5 +308,16 @@ public class BeanUtilsTest {
     public static class Subject {
         private String name;
         private Integer score;
+    }
+
+    public interface Parser<T> {
+
+        default Class<?>[] types() {
+            return BeanUtils.parseGenericInterfaces(getClass()).getOrDefault(Parser.class, Collections.emptyList()).toArray(new Class[0]);
+        }
+    }
+
+    public static class BooleanParser implements Parser<Boolean> {
+
     }
 }
