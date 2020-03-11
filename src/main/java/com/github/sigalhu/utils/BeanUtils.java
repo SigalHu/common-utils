@@ -179,25 +179,52 @@ public class BeanUtils {
     }
 
     /**
-     * 获取泛型类的泛型列表
+     * 获取指定类型继承的泛型父类的泛型列表
      *
      * @param clazz 泛型类
      * @return
      */
-    public static List<Class> parseGenericClass(Class clazz) {
-        List<Class> classes = Lists.newArrayList();
+    public static List<Class<?>> parseGenericClass(Class<?> clazz) {
         Type superClass = clazz.getGenericSuperclass();
         if (!(superClass instanceof ParameterizedType)) {
-            return classes;
+            return Lists.newArrayList();
         }
-        Type[] types = ((ParameterizedType) superClass).getActualTypeArguments();
+        return parseParameterizedType((ParameterizedType) superClass);
+    }
+
+    /**
+     * 获取指定类型实现的泛型接口的泛型列表
+     *
+     * @param clazz 泛型类
+     * @return
+     */
+    public static Map<Class<?>, List<Class<?>>> parseGenericInterfaces(Class<?> clazz) {
+        Type[] interfaces = clazz.getGenericInterfaces();
+        Map<Class<?>, List<Class<?>>> result = new HashMap<>();
+        for (Type anInterface : interfaces) {
+            if (!(anInterface instanceof ParameterizedType)) {
+                continue;
+            }
+            ParameterizedType type = (ParameterizedType) anInterface;
+            result.put((Class<?>) type.getRawType(), parseParameterizedType(type));
+        }
+        return result;
+    }
+
+    /**
+     * 获取参数化类型的泛型列表
+     *
+     * @param parameterizedType 参数化类型
+     * @return
+     */
+    public static List<Class<?>> parseParameterizedType(ParameterizedType parameterizedType) {
+        List<Class<?>> classes = Lists.newArrayList();
+        Type[] types = parameterizedType.getActualTypeArguments();
         if (ArrayUtils.isEmpty(types)) {
             return classes;
         }
         for (Type type : types) {
-            if (type instanceof Class) {
-                classes.add((Class) type);
-            }
+            classes.add((Class<?>) type);
         }
         return classes;
     }
