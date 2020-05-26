@@ -228,4 +228,37 @@ public class BeanUtils {
         }
         return classes;
     }
+
+
+    /**
+     * 通过反射获取指定字段 reader
+     *
+     * @param fieldName 字段名称
+     * @param clazz 字段所在类
+     * @return
+     */
+    public static Optional<Method> reflectReader(String fieldName, Class<?> clazz) {
+        try {
+            PropertyDescriptor descriptor = new PropertyDescriptor(fieldName, clazz);
+            return Optional.of(descriptor.getReadMethod());
+        } catch (Exception ignored) {
+        }
+        return Optional.empty();
+    }
+
+    /**
+     * 通过反射获取指定字段 writer
+     *
+     * @param fieldName 字段名称
+     * @param clazz 字段所在类
+     * @return
+     */
+    public static Optional<Method> reflectWriter(String fieldName, Class<?> clazz) {
+        try {
+            PropertyDescriptor descriptor = new PropertyDescriptor(fieldName, clazz);
+            return Optional.of(descriptor.getWriteMethod());
+        } catch (Exception ignored) {
+        }
+        return Optional.empty();
+    }
 }
